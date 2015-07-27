@@ -9,18 +9,20 @@
 #import "ViewController.h"
 #import "JokeCell.h"
 
-#import "AFNetworking.h"
 #import "JokeModel.h"
-#import "UIImageView+WebCache.h"
 
 
 #define kUrl @"http://ic.snssdk.com/neihan/stream/category/data/v2/?category_id=1&level=6&message_cursor=-1&loc_mode=6&loc_time=1437796161&latitude=34.83101445244&longitude=113.56858354539&city=%E9%83%91%E5%B7%9E%E5%B8%82&count=30&min_time=1437796257&iid=2638530606&device_id=2642690739&ac=wifi&channel=baidu&aid=7&app_name=joke_essay&version_code=341&device_platform=android&device_type=MI%203W&os_api=19&os_version=4.4.4&uuid=864690025797997&openudid=3b911d7ca03aad5d"
 
 @interface ViewController () <UITableViewDataSource , UITableViewDelegate , UITabBarDelegate>
+{
+    BOOL isRefresh;
+    BOOL isOne;
+}
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (nonatomic , strong) NSMutableArray *dataSource;
-@property (weak, nonatomic) IBOutlet UITabBar *tabBar;
+
 
 
 @end
@@ -28,14 +30,18 @@
 static NSString *cellID = @"cell";
 
 @implementation ViewController
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
-    NSLog(@"%ld" , item.tag);
-}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    isOne = YES;
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.view.frame];
+    imageView.image = [UIImage imageNamed:@"jiazai"];
+    [self.tableView.backgroundView addSubview:imageView];
+//    self.tableView.backgroundColor = [UIColor redColor];
+    
     // tabbr 剔除半通明效果
-    self.tabBar.translucent = NO;
+
     // 分割线样式
     self.tableView.separatorStyle = UITableViewCellSelectionStyleGray;
  
@@ -43,12 +49,20 @@ static NSString *cellID = @"cell";
     
     // 导航条的毛玻璃效果剔除
     self.navigationController.navigationBar.translucent = NO;
-    
+    // 配置上下拉刷新
+    self.tableView.header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(shuaXin) ];
+    self.tableView.footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getMore)];
+
     
     self.dataSource = [NSMutableArray array];
     
     // 请求数据
     [self getDataFromJoke];
+    
+    
+}
+// 打开程序白板问题
+- (void)viewWillAppear:(BOOL)animated{
     
     
 }
@@ -58,6 +72,9 @@ static NSString *cellID = @"cell";
 //    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     [manager GET:kUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (isRefresh) {
+            [self.dataSource removeAllObjects];
+        }
         NSDictionary *dic = responseObject;
         NSDictionary *dataDic = [dic objectForKey:@"data"];
         // 刷新了多少条数据
@@ -93,6 +110,9 @@ static NSString *cellID = @"cell";
             JokeModel *model = [[JokeModel alloc]init];
             model.content = groupDic[@"content"];
             
+            if (model.content.length == 0) {
+                continue;
+            }
             NSDictionary *userDic = groupDic[@"user"];
             model.avatar_url = userDic[@"avatar_url"];
             model.name = userDic[@"name"];
@@ -100,8 +120,8 @@ static NSString *cellID = @"cell";
             [self.dataSource addObject:model];
             
         }
-
-           [self.tableView reloadData];
+        // 刷新数据
+        [self.tableView reloadData];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@" , error);
@@ -123,12 +143,20 @@ static NSString *cellID = @"cell";
     return cell;
     
 }
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (isOne) {
+        cell.alpha = 0;
+        isOne = NO;
+    }
+    
+}
+#pragma mark - 配置cell
 - (void)configureCell:(JokeCell *)cell atIndexpath:(NSIndexPath *)indexPath{
     
     JokeModel *model = self.dataSource[indexPath.row];
     NSLog(@"%@" , model);
-    cell.imageView.layer.masksToBounds = YES;
-    cell.imageView.layer.cornerRadius = 15;
+//    cell.imageView.layer.masksToBounds = YES;
+//    cell.imageView.layer.cornerRadius = 15;
     if (model.avatar_url != nil) {
         [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil];
     }
@@ -139,6 +167,8 @@ static NSString *cellID = @"cell";
     }
     cell.contentLabel.text = model.content;
 
+
+    
 }
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 200;
@@ -165,6 +195,25 @@ static NSString *cellID = @"cell";
     return size.height;
 }
 
+#pragma mark - 刷新数据
+- (void)shuaXin{
+    isRefresh = YES;
+    [self getDataFromJoke];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView.header endRefreshing];
+        isRefresh = NO;
+    });
+}
+- (void)getMore{
+    NSInteger row = self.dataSource.count;
+
+    [self getDataFromJoke];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView.footer endRefreshing];
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+    });
+    
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
