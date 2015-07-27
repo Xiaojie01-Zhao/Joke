@@ -159,7 +159,7 @@
 			children = (
 				348904021B660DAC002B9B72 /* LinesLabel.h */,
 				348904031B660DAC002B9B72 /* LinesLabel.m */,
-				348903D01B660277002B9B72 /* SDWebImage第三方下载图片 */,
+				348903D01B660277002B9B72 /* SDWebImage */,
 				348903B31B65DD34002B9B72 /* AFNetworking */,
 			);
 			name = Helpers;
@@ -210,7 +210,7 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
-		348903D01B660277002B9B72 /* SDWebImage第三方下载图片 */ = {
+		348903D01B660277002B9B72 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
 				348903D11B660277002B9B72 /* MKAnnotationView+WebCache.h */,
@@ -247,6 +247,7 @@
 				348903F01B660277002B9B72 /* UIView+WebCacheOperation.h */,
 				348903F11B660277002B9B72 /* UIView+WebCacheOperation.m */,
 			);
+			name = SDWebImage;
 			path = "SDWebImage第三方下载图片";
 			sourceTree = "<group>";
 		};
