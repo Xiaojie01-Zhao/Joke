@@ -8,6 +8,8 @@
 
 #import "JokeModel.h"
 
+
+
 @implementation JokeModel
 
 - (NSString *)description

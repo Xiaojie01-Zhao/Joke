@@ -34,6 +34,9 @@
 		348903FF1B660277002B9B72 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903ED1B660277002B9B72 /* UIImageView+HighlightedWebCache.m */; };
 		348904001B660277002B9B72 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903EF1B660277002B9B72 /* UIImageView+WebCache.m */; };
 		348904011B660277002B9B72 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903F11B660277002B9B72 /* UIView+WebCacheOperation.m */; };
+		348904041B660DAC002B9B72 /* LinesLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904031B660DAC002B9B72 /* LinesLabel.m */; };
+		348904071B662014002B9B72 /* AnimationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904061B662014002B9B72 /* AnimationButton.m */; };
+		3489040B1B6620CD002B9B72 /* MCFireworksView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3489040A1B6620CD002B9B72 /* MCFireworksView.m */; };
 		34EA10451B637182004FC656 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA10441B637182004FC656 /* main.m */; };
 		34EA10481B637182004FC656 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA10471B637182004FC656 /* AppDelegate.m */; };
 		34EA104B1B637182004FC656 /* JOKE.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 34EA10491B637182004FC656 /* JOKE.xcdatamodeld */; };
@@ -111,6 +114,12 @@
 		348903EF1B660277002B9B72 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		348903F01B660277002B9B72 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		348903F11B660277002B9B72 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
+		348904021B660DAC002B9B72 /* LinesLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinesLabel.h; sourceTree = "<group>"; };
+		348904031B660DAC002B9B72 /* LinesLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinesLabel.m; sourceTree = "<group>"; };
+		348904051B662014002B9B72 /* AnimationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationButton.h; sourceTree = "<group>"; };
+		348904061B662014002B9B72 /* AnimationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationButton.m; sourceTree = "<group>"; };
+		348904091B6620CD002B9B72 /* MCFireworksView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCFireworksView.h; sourceTree = "<group>"; };
+		3489040A1B6620CD002B9B72 /* MCFireworksView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCFireworksView.m; sourceTree = "<group>"; };
 		34EA103F1B637182004FC656 /* JOKE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JOKE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34EA10431B637182004FC656 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34EA10441B637182004FC656 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -148,6 +157,8 @@
 		3489038D1B65D205002B9B72 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				348904021B660DAC002B9B72 /* LinesLabel.h */,
+				348904031B660DAC002B9B72 /* LinesLabel.m */,
 				348903D01B660277002B9B72 /* SDWebImage第三方下载图片 */,
 				348903B31B65DD34002B9B72 /* AFNetworking */,
 			);
@@ -157,6 +168,7 @@
 		3489038E1B65D217002B9B72 /* General */ = {
 			isa = PBXGroup;
 			children = (
+				348904081B6620AF002B9B72 /* AnimationButton */,
 				348903901B65D263002B9B72 /* JokeCell.h */,
 				348903911B65D263002B9B72 /* JokeCell.m */,
 				348903B01B65D921002B9B72 /* JokeModel.h */,
@@ -236,6 +248,17 @@
 				348903F11B660277002B9B72 /* UIView+WebCacheOperation.m */,
 			);
 			path = "SDWebImage第三方下载图片";
+			sourceTree = "<group>";
+		};
+		348904081B6620AF002B9B72 /* AnimationButton */ = {
+			isa = PBXGroup;
+			children = (
+				348904051B662014002B9B72 /* AnimationButton.h */,
+				348904061B662014002B9B72 /* AnimationButton.m */,
+				348904091B6620CD002B9B72 /* MCFireworksView.h */,
+				3489040A1B6620CD002B9B72 /* MCFireworksView.m */,
+			);
+			name = AnimationButton;
 			sourceTree = "<group>";
 		};
 		34EA10361B637182004FC656 = {
@@ -403,6 +426,7 @@
 			files = (
 				348903FC1B660277002B9B72 /* UIImage+GIF.m in Sources */,
 				348903F91B660277002B9B72 /* SDWebImageManager.m in Sources */,
+				348904041B660DAC002B9B72 /* LinesLabel.m in Sources */,
 				348904001B660277002B9B72 /* UIImageView+WebCache.m in Sources */,
 				348903F81B660277002B9B72 /* SDWebImageDownloaderOperation.m in Sources */,
 				348903CF1B65DD34002B9B72 /* AFURLSessionManager.m in Sources */,
@@ -420,6 +444,7 @@
 				348903C91B65DD34002B9B72 /* AFHTTPSessionManager.m in Sources */,
 				348903CD1B65DD34002B9B72 /* AFURLRequestSerialization.m in Sources */,
 				348903F51B660277002B9B72 /* SDWebImageCompat.m in Sources */,
+				348904071B662014002B9B72 /* AnimationButton.m in Sources */,
 				348903F31B660277002B9B72 /* NSData+ImageContentType.m in Sources */,
 				348903F61B660277002B9B72 /* SDWebImageDecoder.m in Sources */,
 				34EA104B1B637182004FC656 /* JOKE.xcdatamodeld in Sources */,
@@ -432,6 +457,7 @@
 				348903CE1B65DD34002B9B72 /* AFURLResponseSerialization.m in Sources */,
 				348903F71B660277002B9B72 /* SDWebImageDownloader.m in Sources */,
 				348903C71B65DD34002B9B72 /* AFHTTPRequestOperation.m in Sources */,
+				3489040B1B6620CD002B9B72 /* MCFireworksView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
