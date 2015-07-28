@@ -173,7 +173,8 @@ static NSString *cellID = @"cell";
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 200;
 }
-// 自适应cell 的高度
+
+#pragma mark - // 自适应cell 的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
  
     static JokeCell *cell = nil;
@@ -186,7 +187,7 @@ static NSString *cellID = @"cell";
     [self configureCell:cell atIndexpath:indexPath];
     
     //配置cell 的bounds
-    cell.bounds = CGRectMake(0.0, 0.0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(tableView.bounds));
+    cell.bounds = CGRectMake(0.0, 0.0, CGRectGetWidth(tableView.bounds), 10000);
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
     
@@ -214,6 +215,33 @@ static NSString *cellID = @"cell";
     });
     
 }
+
+- (CGFloat)chechCacheSize{
+    float totalSize = 0;
+    
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *picturePath = [cachePath stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    
+    NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:picturePath];
+    for (NSString *fileName in fileEnumerator) {
+        NSString *filePath = [picturePath stringByAppendingPathComponent:fileName];
+        NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+        unsigned long long lenth = [attrs fileSize];
+        totalSize += lenth / 1024.0 / 1024.0;
+    }
+    NSLog(@"cache size is %.2f" , totalSize);
+    return totalSize;
+}
+- (void)clearCachePics{
+    [[SDImageCache sharedImageCache] cleanDisk];
+    [[SDImageCache sharedImageCache] clearMemory];
+    
+//    float cacheSize = [SDImageCache sharedImageCache] che
+    
+    
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

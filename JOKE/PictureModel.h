@@ -14,6 +14,7 @@
 @property (nonatomic , copy) NSString *name;
 @property (nonatomic , copy) NSString *content;
 @property (nonatomic , copy) NSString *contentImageUrlStr;
-
+@property (nonatomic , assign) CGFloat width;
+@property (nonatomic , assign) CGFloat height;
 
 @end

@@ -12,7 +12,9 @@
 #import "PictureCell.h"
 #import "PictureModel.h"
 @interface PictureTableViewController () <UITableViewDataSource , UITableViewDelegate>
-
+{
+    BOOL isRefresh;
+}
 @property (nonatomic , strong) NSMutableArray *dataSource;
 
 @end
@@ -26,13 +28,36 @@ static NSString *cellID = @"cell";
     self.dataSource = [NSMutableArray array];
  
     [self getDataFromPicture];
+    
+    // 刷新
+    self.tableView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        isRefresh = YES;
+        [self getDataFromPicture];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [self.tableView.header endRefreshing];
+        });
+    }];
+    self.tableView.footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        [self getDataFromPicture];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView.footer endRefreshing];
+            
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        });
+        
+    }];
 }
 - (void)getDataFromPicture{
     
     AFHTTPRequestOperationManager *manage = [AFHTTPRequestOperationManager manager];
     
     [manage GET:kUrl parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
+        if (isRefresh) {
+            [self.dataSource removeAllObjects];
+        }
         NSDictionary *bigDic = responseObject;
         NSDictionary *dataDic = bigDic[@"data"];
         
@@ -51,10 +76,16 @@ static NSString *cellID = @"cell";
 
             // 内容图片
             NSDictionary *large_imageDic = groupDic[@"large_image"];
+            
+            model.width = [large_imageDic[@"width"] floatValue];
+            model.height = [large_imageDic[@"height"] floatValue];
+            
             NSArray *urlArr = large_imageDic[@"url_list"];
             NSDictionary *urlDic = urlArr[0];
             model.contentImageUrlStr = urlDic[@"url"];
-            
+            if (model.contentImageUrlStr.length == 0) {
+                continue;
+            }
             [self.dataSource addObject:model];
         }
         NSLog(@"%@" , self.dataSource);
@@ -100,10 +131,52 @@ static NSString *cellID = @"cell";
         cell.namelabel.text = @"匿名用户";
     }
     cell.contentLabel.text = model.content;
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:nil];
-    
-}
+//    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        
+        // 加载完成后
+        NSLog(@"加载完成");
+        
+    }];
 
+}
+#pragma mark - cell只适应高度
+///*
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static PictureCell *cell = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    });
+    
+    // 配置cell
+    [self configurationCellForCell:cell forIndexPath:indexPath];
+    
+    // 重新配置cell的bounds
+    cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(tableView.bounds));
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
+    
+    // 计算cell的高度
+    CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
+}
+ //*/
+
+
+
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    PictureModel *model = self.dataSource [indexPath.row];
+//    
+//    CGRect rect = [model.content boundingRectWithSize:CGSizeMake(CGRectGetWidth(tableView.bounds), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil];
+//    CGFloat contentLabelHeight = rect.size.height;
+//    
+//    
+//}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
