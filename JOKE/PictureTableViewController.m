@@ -25,8 +25,9 @@ static NSString *cellID = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.dataSource = [NSMutableArray array];
- 
+    
     [self getDataFromPicture];
     
     // 刷新
@@ -45,10 +46,13 @@ static NSString *cellID = @"cell";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.footer endRefreshing];
             
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionBottom];
         });
         
     }];
+}
+- (void)viewWillAppear:(BOOL)animated{
+   
 }
 - (void)getDataFromPicture{
     
@@ -89,10 +93,16 @@ static NSString *cellID = @"cell";
             [self.dataSource addObject:model];
         }
         NSLog(@"%@" , self.dataSource);
-        [self.tableView reloadData];
+        __weak PictureTableViewController *weakSelf = self;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+
+        });
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@" , error);
+        
     }];
     
 }
@@ -118,7 +128,6 @@ static NSString *cellID = @"cell";
     PictureCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
     
     [self configurationCellForCell:cell forIndexPath:indexPath];
-    
     return cell;
 }
 
@@ -131,12 +140,9 @@ static NSString *cellID = @"cell";
         cell.namelabel.text = @"匿名用户";
     }
     cell.contentLabel.text = model.content;
-//    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"]];
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        
-        // 加载完成后
+
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage.gif"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         NSLog(@"加载完成");
-        
     }];
 
 }
@@ -165,6 +171,17 @@ static NSString *cellID = @"cell";
 }
  //*/
 
+#pragma mark - 下载图片
+- (void)downLoadImageWithUrl:(NSURL *)url{
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+       
+        NSLog(@"显示当前进度%ld" ,receivedSize);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        NSLog(@"下载完成,把图片保存到表中");
+        
+    }];
+}
 
 
 

@@ -33,11 +33,13 @@ static NSString *cellID = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    isOne = YES;
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.view.frame];
-    imageView.image = [UIImage imageNamed:@"jiazai"];
-    [self.tableView.backgroundView addSubview:imageView];
+    self.dataSource = [NSMutableArray array];
+    // 请求数据
+    [self getDataFromJoke];
+//    isOne = YES;
+//    UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.view.frame];
+//    imageView.image = [UIImage imageNamed:@"jiazai"];
+//    [self.tableView.backgroundView addSubview:imageView];
 //    self.tableView.backgroundColor = [UIColor redColor];
     
     // tabbr 剔除半通明效果
@@ -54,17 +56,16 @@ static NSString *cellID = @"cell";
     self.tableView.footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(getMore)];
 
     
-    self.dataSource = [NSMutableArray array];
+   
     
-    // 请求数据
-    [self getDataFromJoke];
+    
     
     
 }
 // 打开程序白板问题
 - (void)viewWillAppear:(BOOL)animated{
     
-    
+   
 }
 - (void)getDataFromJoke{
     
@@ -117,6 +118,8 @@ static NSString *cellID = @"cell";
             model.avatar_url = userDic[@"avatar_url"];
             model.name = userDic[@"name"];
             
+//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0];
+//            [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
             [self.dataSource addObject:model];
             
         }
@@ -155,8 +158,7 @@ static NSString *cellID = @"cell";
     
     JokeModel *model = self.dataSource[indexPath.row];
     NSLog(@"%@" , model);
-//    cell.imageView.layer.masksToBounds = YES;
-//    cell.imageView.layer.cornerRadius = 15;
+
     if (model.avatar_url != nil) {
         [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil];
     }
@@ -206,12 +208,12 @@ static NSString *cellID = @"cell";
     });
 }
 - (void)getMore{
-    NSInteger row = self.dataSource.count;
+    NSInteger row = self.dataSource.count - 1;
 
     [self getDataFromJoke];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.tableView.footer endRefreshing];
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] animated:YES scrollPosition:UITableViewScrollPositionBottom];
     });
     
 }

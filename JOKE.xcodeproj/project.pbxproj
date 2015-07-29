@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3478588A1B68AD560034696F /* AVPalyerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 347858891B68AD560034696F /* AVPalyerView.m */; };
+		347DADA81B6764D100E2C318 /* VideoTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DADA71B6764D100E2C318 /* VideoTVC.m */; };
+		347DADAB1B6764E800E2C318 /* VideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DADAA1B6764E800E2C318 /* VideoCell.m */; };
+		347DADAE1B67650000E2C318 /* VideoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DADAD1B67650000E2C318 /* VideoModel.m */; };
 		348903921B65D263002B9B72 /* JokeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903911B65D263002B9B72 /* JokeCell.m */; };
 		348903B21B65D921002B9B72 /* JokeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903B11B65D921002B9B72 /* JokeModel.m */; };
 		348903C71B65DD34002B9B72 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 348903B51B65DD34002B9B72 /* AFHTTPRequestOperation.m */; };
@@ -56,7 +60,6 @@
 		348904491B664B3D002B9B72 /* UIScrollView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904341B664B3D002B9B72 /* UIScrollView+MJExtension.m */; };
 		3489044A1B664B3D002B9B72 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904361B664B3D002B9B72 /* UIScrollView+MJRefresh.m */; };
 		3489044B1B664B3D002B9B72 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904381B664B3D002B9B72 /* UIView+MJExtension.m */; };
-		348904531B6665CC002B9B72 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904521B6665CC002B9B72 /* RootViewController.m */; };
 		348904561B6666B1002B9B72 /* PictureTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904551B6666B1002B9B72 /* PictureTableViewController.m */; };
 		348904591B666705002B9B72 /* PictureCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904581B666705002B9B72 /* PictureCell.m */; };
 		3489045C1B666718002B9B72 /* PictureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3489045B1B666718002B9B72 /* PictureModel.m */; };
@@ -81,6 +84,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		347858881B68AD560034696F /* AVPalyerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPalyerView.h; sourceTree = "<group>"; };
+		347858891B68AD560034696F /* AVPalyerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPalyerView.m; sourceTree = "<group>"; };
+		347DADA61B6764D100E2C318 /* VideoTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTVC.h; sourceTree = "<group>"; };
+		347DADA71B6764D100E2C318 /* VideoTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTVC.m; sourceTree = "<group>"; };
+		347DADA91B6764E800E2C318 /* VideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCell.h; sourceTree = "<group>"; };
+		347DADAA1B6764E800E2C318 /* VideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCell.m; sourceTree = "<group>"; };
+		347DADAC1B67650000E2C318 /* VideoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoModel.h; sourceTree = "<group>"; };
+		347DADAD1B67650000E2C318 /* VideoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoModel.m; sourceTree = "<group>"; };
 		348903901B65D263002B9B72 /* JokeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JokeCell.h; sourceTree = "<group>"; };
 		348903911B65D263002B9B72 /* JokeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JokeCell.m; sourceTree = "<group>"; };
 		348903B01B65D921002B9B72 /* JokeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JokeModel.h; sourceTree = "<group>"; };
@@ -182,8 +193,6 @@
 		348904371B664B3D002B9B72 /* UIView+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MJExtension.h"; sourceTree = "<group>"; };
 		348904381B664B3D002B9B72 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		348904501B664E97002B9B72 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		348904511B6665CC002B9B72 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		348904521B6665CC002B9B72 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		348904541B6666B1002B9B72 /* PictureTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PictureTableViewController.h; sourceTree = "<group>"; };
 		348904551B6666B1002B9B72 /* PictureTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PictureTableViewController.m; sourceTree = "<group>"; };
 		348904571B666705002B9B72 /* PictureCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PictureCell.h; sourceTree = "<group>"; };
@@ -224,6 +233,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		347DADA51B67635400E2C318 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				347DADA61B6764D100E2C318 /* VideoTVC.h */,
+				347DADA71B6764D100E2C318 /* VideoTVC.m */,
+				347DADA91B6764E800E2C318 /* VideoCell.h */,
+				347DADAA1B6764E800E2C318 /* VideoCell.m */,
+				347DADAC1B67650000E2C318 /* VideoModel.h */,
+				347DADAD1B67650000E2C318 /* VideoModel.m */,
+				347858881B68AD560034696F /* AVPalyerView.h */,
+				347858891B68AD560034696F /* AVPalyerView.m */,
+			);
+			name = Video;
+			sourceTree = "<group>";
+		};
+		347DADAF1B67652700E2C318 /* Joke */ = {
+			isa = PBXGroup;
+			children = (
+				34EA104C1B637182004FC656 /* ViewController.h */,
+				34EA104D1B637182004FC656 /* ViewController.m */,
+			);
+			name = Joke;
+			sourceTree = "<group>";
+		};
 		3489038D1B65D205002B9B72 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -251,9 +284,9 @@
 		3489038F1B65D222002B9B72 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				347DADAF1B67652700E2C318 /* Joke */,
+				347DADA51B67635400E2C318 /* Video */,
 				3489045D1B66671C002B9B72 /* Picture */,
-				348904511B6665CC002B9B72 /* RootViewController.h */,
-				348904521B6665CC002B9B72 /* RootViewController.m */,
 			);
 			name = Sections;
 			sourceTree = "<group>";
@@ -468,8 +501,6 @@
 				3489038D1B65D205002B9B72 /* Helpers */,
 				34EA10461B637182004FC656 /* AppDelegate.h */,
 				34EA10471B637182004FC656 /* AppDelegate.m */,
-				34EA104C1B637182004FC656 /* ViewController.h */,
-				34EA104D1B637182004FC656 /* ViewController.m */,
 				34EA104F1B637182004FC656 /* Main.storyboard */,
 				34EA10521B637182004FC656 /* Images.xcassets */,
 				34EA10541B637182004FC656 /* LaunchScreen.xib */,
@@ -613,10 +644,10 @@
 				348904451B664B3D002B9B72 /* MJRefreshNormalHeader.m in Sources */,
 				348904491B664B3D002B9B72 /* UIScrollView+MJExtension.m in Sources */,
 				348904401B664B3D002B9B72 /* MJRefreshAutoStateFooter.m in Sources */,
-				348904531B6665CC002B9B72 /* RootViewController.m in Sources */,
 				348903F91B660277002B9B72 /* SDWebImageManager.m in Sources */,
 				348904041B660DAC002B9B72 /* LinesLabel.m in Sources */,
 				348904001B660277002B9B72 /* UIImageView+WebCache.m in Sources */,
+				3478588A1B68AD560034696F /* AVPalyerView.m in Sources */,
 				348903F81B660277002B9B72 /* SDWebImageDownloaderOperation.m in Sources */,
 				348903CF1B65DD34002B9B72 /* AFURLSessionManager.m in Sources */,
 				3489043E1B664B3D002B9B72 /* MJRefreshAutoGifFooter.m in Sources */,
@@ -655,8 +686,11 @@
 				348903C81B65DD34002B9B72 /* AFHTTPRequestOperationManager.m in Sources */,
 				348903CB1B65DD34002B9B72 /* AFSecurityPolicy.m in Sources */,
 				3489044A1B664B3D002B9B72 /* UIScrollView+MJRefresh.m in Sources */,
+				347DADA81B6764D100E2C318 /* VideoTVC.m in Sources */,
 				3489043D1B664B3D002B9B72 /* MJRefreshHeader.m in Sources */,
+				347DADAE1B67650000E2C318 /* VideoModel.m in Sources */,
 				348903CE1B65DD34002B9B72 /* AFURLResponseSerialization.m in Sources */,
+				347DADAB1B6764E800E2C318 /* VideoCell.m in Sources */,
 				348904591B666705002B9B72 /* PictureCell.m in Sources */,
 				348903F71B660277002B9B72 /* SDWebImageDownloader.m in Sources */,
 				348904411B664B3D002B9B72 /* MJRefreshBackGifFooter.m in Sources */,
