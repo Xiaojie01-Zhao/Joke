@@ -20,5 +20,15 @@
 #import "MJRefreshHeader.h"
 #import "MJRefreshFooter.h"
 
+// 菊花
+#import "MBProgressHUD.h"
+
+// menu
+#import "CXDynamicModuleView.h"
+#import "MenuViewController.h"
+#import "CXDynamicModuleView.h"
+#import "SelectView.h"
+
+#define RGB_COLOR(r,g,b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1]
 
 #endif

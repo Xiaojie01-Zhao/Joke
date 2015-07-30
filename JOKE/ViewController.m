@@ -30,6 +30,10 @@
 static NSString *cellID = @"cell";
 
 @implementation ViewController
+- (IBAction)leftNAVAction:(id)sender {
+    
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -217,7 +221,7 @@ static NSString *cellID = @"cell";
     });
     
 }
-
+#pragma mark - 计算缓存的大小
 - (CGFloat)chechCacheSize{
     float totalSize = 0;
     

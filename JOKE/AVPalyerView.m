@@ -55,7 +55,7 @@
     
     self.bigPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.bigPlayButton setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
-    [self.bigPlayButton setFrame:CGRectMake(self.frame.size.width/ 2 - 25, self.frame.size.height/2 - 25, 50, 50 )];
+    [self.bigPlayButton setFrame:CGRectMake(self.frame.size.width/ 2 - 30, self.frame.size.height/2 - 30, 60, 60 )];
     [self addSubview:_bigPlayButton];
 }
 /*

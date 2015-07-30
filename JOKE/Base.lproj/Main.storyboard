@@ -129,7 +129,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5Nw-sN-U1q">
-                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="hJa-Aw-xfL"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="hJa-Aw-xfL">
+                            <connections>
+                                <action selector="leftNAVAction:" destination="vXZ-lx-hvc" id="tuJ-mB-bMF"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Sol-fW-1od" id="9mK-vm-gZN"/>
@@ -142,6 +146,7 @@
         <!--段子-->
         <scene sceneID="scb-Lu-aXt">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3AV-wY-RmO" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="UOO-2U-hjh" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="段子" image="duanzi" id="hUh-k6-6KZ"/>
                     <toolbarItems/>
@@ -154,7 +159,6 @@
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="g6A-Jp-zoc"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3AV-wY-RmO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="660" y="193"/>
         </scene>
@@ -223,7 +227,13 @@
                             <outlet property="delegate" destination="G0o-k8-a1K" id="amd-qc-vYj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="VFy-bL-HMt"/>
+                    <navigationItem key="navigationItem" id="VFy-bL-HMt">
+                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="Chw-KM-Kjt">
+                            <connections>
+                                <action selector="leftAction:" destination="G0o-k8-a1K" id="0PK-Q1-Mcd"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tgq-fQ-M4d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -247,7 +257,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N4N-SG-xtJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-132" y="248"/>
+            <point key="canvasLocation" x="-50" y="262"/>
         </scene>
         <!--VideoTVC-->
         <scene sceneID="mCy-Ux-BnQ">
@@ -314,11 +324,17 @@
                             <outlet property="delegate" destination="GUl-rm-Bbr" id="zRJ-Jp-gkw"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="Dxf-iW-djN"/>
+                    <navigationItem key="navigationItem" id="Dxf-iW-djN">
+                        <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="14D-TY-9Yc">
+                            <connections>
+                                <action selector="leftAction:" destination="GUl-rm-Bbr" id="9Uq-n7-NYq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vSR-pM-zfw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="284" y="1242"/>
+            <point key="canvasLocation" x="832" y="1104"/>
         </scene>
         <!--囧图-->
         <scene sceneID="aoD-mO-1lB">
@@ -356,7 +372,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zbk-5Q-Ux7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-408" y="1275"/>
+            <point key="canvasLocation" x="106" y="1091"/>
         </scene>
     </scenes>
     <resources>

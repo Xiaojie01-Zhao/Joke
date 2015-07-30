@@ -30,11 +30,20 @@
 @property (nonatomic , assign) CGFloat totalMovieDuration;
 @property (nonatomic , strong) NSURL *movieURL;
 
+// 判断进度是否在东，也就是网速是否给力
+@property (nonatomic , assign) CGFloat isKale;
+
+
+@property (nonatomic , strong) MBProgressHUD *mb;
+
+
 @end
 
 static NSString *cellID = @"cell";
 
 @implementation VideoTVC
+- (IBAction)leftAction:(id)sender {
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -55,7 +64,7 @@ static NSString *cellID = @"cell";
         [self getDataForVideo];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.footer endRefreshing];
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionBottom];
+//            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
         });
     }];
 }
@@ -157,11 +166,29 @@ static NSString *cellID = @"cell";
     [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.userIcon]];
     cell.nameLabel.text = model.name;
     cell.contentLabel.text = model.content;
+    cell.contentImageView.userInteractionEnabled = YES;
     [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         
     }];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchContentImageView:)];
+    [cell.contentImageView addGestureRecognizer:tap];
+    
+//    UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    //
+//    playButton.frame = CGRectMake(cell.contentImageView.bounds.size.width / 2 - 30, cell.contentImageView.bounds.size.height / 2 - 30, 60, 60);
+//    [playButton setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
+//    [playButton addTarget:self action:@selector(playButtonActionsss:) forControlEvents:UIControlEventTouchUpInside];
+//    [cell.contentImageView addSubview:playButton];
+    
 }
+//- (void)playButtonActionsss:(UIButton *)sender{
+//    [self.player play];
+//    [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
+//    
+//    self.isBigPlayer = YES;
+//
+//}
 #pragma mark - 滑动tableView
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -182,50 +209,31 @@ static NSString *cellID = @"cell";
     self.isPlayOrParse = NO;
 
 }
-#pragma  mark - big播放
-- (void)playMovieAction:(UIButton *)sender{
+#pragma mark - contentImage Action
+- (void)touchContentImageView:(UITapGestureRecognizer *)sender{
+    NSLog(@"%@", [sender.view.superview.superview class]);
     
-    NSLog(@"***************########%@" , [sender.superview.superview.superview.superview class]);
-    if (!self.isBigPlayer) {
-        [self.player play];
-        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
-        
-        self.isBigPlayer = YES;
-        __weak typeof(self) myself = self;
-        [UIView animateWithDuration:0.2f animations:^{
-            myself.avPlayerView.bigPlayButton.alpha  = 0;
-            myself.avPlayerView.bottomOperationView.alpha = 0;
-        }];
-    } else {
-        //  视屏播放器暂停
+    
+    if (self.player.status == AVPlayerStatusReadyToPlay) {
         [self.player pause];
-        
-        //  切换图片
-        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
-        self.avPlayerView.bottomOperationView.alpha = 0.68;
-        self.isBigPlayer = NO;
-        
     }
-}
-#pragma mark - cell点击事件 加载播放器
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-//    VideoCell *cell0 = (VideoCell *)[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:0]];
+   
     if (self.avPlayerView) {
         [self.avPlayerView removeFromSuperview];
         self.movieURL = nil;
         self.player = nil;
-//        [cell0.contentImageView.layer removeFromSuperlayer];
         [self removeObserverFromPlayerItem:self.player.currentItem];
     }
     
-    VideoCell *cell = (VideoCell *)[tableView cellForRowAtIndexPath:indexPath];
-    VideoModel *model = self.dataSource[indexPath.row];
 
+    VideoCell *cell = (VideoCell *)sender.view.superview.superview;
+    
+    VideoModel *model = self.dataSource[[self.tableView indexPathForCell:cell].row];
+    
     NSLog(@"*******************%@" , model.contentVideoUrlStr);
-
+    
     self.movieURL = [NSURL URLWithString:model.contentVideoUrlStr];
-   
+    
     
     // cell上添加播放器
     cell.contentImageView.userInteractionEnabled = YES;
@@ -234,6 +242,11 @@ static NSString *cellID = @"cell";
     
     // 配置播放器功能
     [self configurePlayer:(VideoCell *)cell];
+}
+#pragma mark - cell点击事件 加载播放器
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+ 
 
 }
 - (void)configurePlayer:(VideoCell *)cell{
@@ -255,8 +268,8 @@ static NSString *cellID = @"cell";
     
     // big播放
     [self.avPlayerView.bigPlayButton addTarget:self action:@selector(playMovieAction:) forControlEvents:UIControlEventTouchUpInside];
-    // 播放
-    [self.avPlayerView.playButton addTarget:self action:@selector(playButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+
+
     //  给进度的滑杆设置事件
     [self.avPlayerView.progressSlider addTarget:self action:@selector(scrubberIsScrolling:) forControlEvents:UIControlEventValueChanged];
     
@@ -272,6 +285,60 @@ static NSString *cellID = @"cell";
 - (void)saveButtonAction:(UIButton *)sender
 {
     NSLog(@"您点击了下载！");
+    NSLog(@"%@" , [sender.superview.superview.superview.superview.superview class]);
+    VideoCell *cell = (VideoCell *)sender.superview.superview.superview.superview.superview;
+    VideoModel *model = self.dataSource[[self.tableView indexPathForCell:cell].row];
+    NSURL *downloadMovieURL = [NSURL URLWithString:model.contentVideoUrlStr];
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    
+    NSString *file = [model.contentVideoUrlStr stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    NSLog(@"%@" , file);
+    
+    
+    NSString *filePath = [cachePath stringByAppendingPathComponent:file];
+    NSLog(@"视频下载路径%@" , filePath);
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        
+        //下载
+        [self downloadMovieWithURL:downloadMovieURL andFilePath:filePath];
+    } else {
+        NSLog(@"您已经下载过了");
+    }
+}
+#pragma mark - 下载视频
+- (void)downloadMovieWithURL:(NSURL *)url andFilePath:(NSString *)filePath{
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:-1];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:request];
+    
+    // 下载中 的方法，我们用它可以用来 观察进度，做一个进度条
+//    __weak typeof(self) weakSelf = self;
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+       
+        // 可以显示进度
+//             weakSelf.progressView.progress = (float )totalBytesRead / totalBytesExpectedToRead;
+        
+    }];
+    
+    // 赋值url
+    operation.outputStream = [[NSOutputStream alloc]initToFileAtPath:filePath append:YES];
+    
+    // 下载完成后的回调
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"下载成功");
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"下载失败");
+    }];
+    
+    // 开启下载任务
+//    [operation start];
+    // 或者创建一个对列
+    NSOperationQueue *queue = [[NSOperationQueue alloc]init];
+    [queue addOperation:operation];
+    
 }
 #pragma mark 轻拍手势的事件
 //  用于把上面的操作视图动画隐藏
@@ -304,36 +371,72 @@ static NSString *cellID = @"cell";
         
     }
 }
+#pragma  mark - big播放
+- (void)playMovieAction:(UIButton *)sender{
+    
+    NSLog(@"%@" , [sender.superview.superview.superview.superview class]);
+    if (!self.isBigPlayer) {
+        // 菊花
+        self.isKale = YES;
+        self.mb = [[MBProgressHUD alloc]init];
+        [self.avPlayerView addSubview:_mb];
+        self.mb.labelText = @"加载中...";
+        self.mb.mode = MBProgressHUDModeIndeterminate;
+        _mb.dimBackground =  NO;
+        [self.mb show:YES];
+        
 
-#pragma mark 播放或暂停
-- (void)playButtonAction:(UIButton *)sender
-{
-    
-    //  在这里你可以自己设置bool值来判断是否正在播放或者已经停止，也可以通过，播放器自带的rate属性，当rate为0时，为暂停，当rate为1时为正在播放
-    
-    if (!self.isPlayOrParse) {
+        
+        // 播放
         [self.player play];
-        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
-        self.isPlayOrParse = YES;
-        
+       [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
+   
+        self.isBigPlayer = YES;
         __weak typeof(self) myself = self;
-        [UIView animateWithDuration:.2f animations:^{
-            
+        [UIView animateWithDuration:0.2f animations:^{
+            myself.avPlayerView.bigPlayButton.alpha  = 0;
             myself.avPlayerView.bottomOperationView.alpha = 0;
-            myself.isFirstTap = YES;
-            
         }];
-        
-    } else{
+    } else {
         //  视屏播放器暂停
         [self.player pause];
         
         //  切换图片
         [sender setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
-        self.isPlayOrParse = NO;
-        
+        self.avPlayerView.bottomOperationView.alpha = 0.68;
+        self.isBigPlayer = NO;
+
     }
 }
+#pragma mark 播放或暂停
+//- (void)playButtonAction:(UIButton *)sender
+//{
+//    
+//    //  在这里你可以自己设置bool值来判断是否正在播放或者已经停止，也可以通过，播放器自带的rate属性，当rate为0时，为暂停，当rate为1时为正在播放
+//    
+//    if (!self.isPlayOrParse) {
+//        [self.player play];
+//        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
+//        self.isPlayOrParse = YES;
+//        
+//        __weak typeof(self) myself = self;
+//        [UIView animateWithDuration:.2f animations:^{
+//            
+//            myself.avPlayerView.bottomOperationView.alpha = 0;
+//            myself.isFirstTap = YES;
+//            
+//        }];
+//        
+//    } else{
+//        //  视屏播放器暂停
+//        [self.player pause];
+//        
+//        //  切换图片
+//        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
+//        self.isPlayOrParse = NO;
+//        
+//    }
+//}
 #pragma mark 调节进度
 - (void)scrubberIsScrolling:(UISlider *)sender
 {
@@ -394,8 +497,17 @@ static NSString *cellID = @"cell";
     __weak typeof(self) mySelf = self;
     //  设置每秒执行一次
     [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        
         //  获取当前的进度
         float current = CMTimeGetSeconds(time);
+        
+        // 在这判断网络不型
+//        if (mySelf.isKale == current) {
+//            
+//            NSLog(@"卡了");
+//        }
+//        mySelf.isKale = current;
+        
         //  获取全部资源的大小
         float total = CMTimeGetSeconds([playerItem duration]);
         //  计算出进度
@@ -461,6 +573,7 @@ static NSString *cellID = @"cell";
             
         }
     }else if([keyPath isEqualToString:@"loadedTimeRanges"]){
+        
         NSArray *array=playerItem.loadedTimeRanges;
         CMTimeRange timeRange = [array.firstObject CMTimeRangeValue];//本次缓冲时间范围
         float startSeconds = CMTimeGetSeconds(timeRange.start);
@@ -469,6 +582,11 @@ static NSString *cellID = @"cell";
         NSLog(@"%.2f , %.2f" , startSeconds , durationSeconds);
         NSLog(@"共缓冲：%.2f",totalBuffer);
         //
+        
+        if (self.isKale && totalBuffer != 0) {
+            // 取消菊花
+            [self.mb hide:YES];
+        }
     }
 }
 - (void)dealloc

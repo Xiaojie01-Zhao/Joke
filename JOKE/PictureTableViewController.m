@@ -14,6 +14,7 @@
 @interface PictureTableViewController () <UITableViewDataSource , UITableViewDelegate>
 {
     BOOL isRefresh;
+     NSMutableArray *_testMutableArray;
 }
 @property (nonatomic , strong) NSMutableArray *dataSource;
 
@@ -22,6 +23,61 @@
 static NSString *cellID = @"cell";
 
 @implementation PictureTableViewController
+- (IBAction)leftAction:(id)sender {
+    
+    _testMutableArray = [NSMutableArray array];
+    
+    NSArray *color = @[RGB_COLOR(110, 195, 200),RGB_COLOR(241, 122, 110),RGB_COLOR(218, 96, 36),RGB_COLOR(250, 187, 13),RGB_COLOR(241, 146, 113),RGB_COLOR(28, 78, 147),RGB_COLOR(3, 166, 174)];
+    NSArray *title = @[@"下载", @"夜间模式" , @"清除缓存" , @"关于我们"];
+    NSInteger count = title.count;
+    
+    for (int index = 0; index < count; index ++) {
+        SelectView *view = [[SelectView alloc]init];
+        
+        view.teamName.text = title[index];
+        view.backgroundColor = color[index];
+        view.selectButton.index = index;
+        [_testMutableArray addObject:view];
+        
+        view.selectButton.myBlockButton = ^(BaseButton *button){
+            NSLog( @"您点击的是 %ld" , button.index);
+            
+            [UIView animateWithDuration:0.25 animations:^{
+                view.transform = CGAffineTransformMakeScale(2, 2);
+                view.alpha = 0.1;
+                for (UIView *selectView in _testMutableArray) {
+                    if (![selectView isEqual:view]) {
+                        selectView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+                        
+                    }
+                }
+                
+            } completion:^(BOOL finished) {
+                for (UIView *selectView in _testMutableArray) {
+                    selectView.transform = CGAffineTransformMakeScale(1, 1);
+                    selectView.alpha = 1;
+                    
+                }
+                UIView *adcd = (UIView *)[self.view viewWithTag:10003];
+                [adcd removeFromSuperview];
+                if ([view.teamName.text isEqualToString:@"下载"]) {
+                    
+                    NSLog(@"下载");
+                }
+                if ([view.teamName.text isEqualToString:@"夜间模式"]) {
+                    
+                }
+            }];
+            
+        };
+    }
+    CXDynamicModuleView *c_x = [[CXDynamicModuleView alloc]initWithFrame:self.view.bounds];
+    c_x.imageNameArray = _testMutableArray;
+    UIView * abc =  [c_x loadDynamicModuleView:self.view];
+    abc.tag = 10003;
+    [self.view addSubview:abc];
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,15 +94,18 @@ static NSString *cellID = @"cell";
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
             [self.tableView.header endRefreshing];
+            isRefresh = NO;
         });
+
     }];
     self.tableView.footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         [self getDataFromPicture];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+          
             [self.tableView.footer endRefreshing];
             
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionBottom];
+//            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
         });
         
     }];
@@ -141,9 +200,11 @@ static NSString *cellID = @"cell";
     }
     cell.contentLabel.text = model.content;
 
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage.gif"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         NSLog(@"加载完成");
     }];
+//    cell.contentImageView.frame = CGRectMake(0, 0, 375, 667);
 
 }
 #pragma mark - cell只适应高度
@@ -170,7 +231,9 @@ static NSString *cellID = @"cell";
     return size.height;
 }
  //*/
-
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 300;
+}
 #pragma mark - 下载图片
 - (void)downLoadImageWithUrl:(NSURL *)url{
     
