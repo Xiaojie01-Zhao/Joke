@@ -138,7 +138,11 @@ static NSString *cellID = @"cell";
 
 - (void)configurationCellForCell:(PictureCell *)cell forIndexPath:(NSIndexPath *)indexPath{
     PictureModel *model = self.dataSource[indexPath.row];
-    [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.userIcon] placeholderImage:nil];
+    
+   [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.userIcon] placeholderImage:nil options:SDWebImageProgressiveDownload | SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+       
+   }];
+    
     if (model.name.length != 0) {
         cell.namelabel.text = model.name;
     } else {
@@ -150,8 +154,13 @@ static NSString *cellID = @"cell";
       CGSize size = CGSizeMake(model.width, model.height);
     cell.imageHeight.constant = imageWidth * size.height / size.width;
     
+    NSString *imagepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle]bundlePath]] pathForResource:@"placeholderImage.gif" ofType:nil];
+    NSData *imageData = [NSData dataWithContentsOfFile:imagepath];
+
+
+    
     [cell.contentImageView setContentMode:UIViewContentModeScaleToFill];
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] options:SDWebImageProgressiveDownload | SDWebImageCacheMemoryOnly | SDWebImageTransformAnimatedImage | SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage sd_animatedGIFWithData:imageData] options:SDWebImageProgressiveDownload |  SDWebImageTransformAnimatedImage | SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         NSLog(@"加载完成");
 //        CGSize size = CGSizeMake(model.width, model.height);
 //        UIImage *newImage =  [self scaleToSize:size andImage:image];
@@ -163,6 +172,7 @@ static NSString *cellID = @"cell";
 
 
 }
+
 #pragma mark - 等比例绘制image
 - (UIImage *)scaleToSize:(CGSize)size andImage:(UIImage *)image{
     
@@ -192,6 +202,9 @@ static NSString *cellID = @"cell";
     
     // 重新配置cell的bounds
     cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(tableView.bounds));
+    
+    // 更新约束
+    [cell setNeedsUpdateConstraints];
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
     
@@ -204,18 +217,100 @@ static NSString *cellID = @"cell";
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 300;
 }
-#pragma mark - 下载图片
-- (void)downLoadImageWithUrl:(NSURL *)url{
+
+#pragma mark - 下载图片事件
+- (IBAction)downloadImage:(id)sender {
+    NSLog(@"正在下载图片");
+
+    NSLog(@"%@" , [((UIButton *)sender).superview.superview class]);
+
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:(PictureCell *)((UIButton *)sender).superview.superview ];
+    PictureModel *model = self.dataSource [indexPath.row];
+   
+    NSLog(@"%@" , model.contentImageUrlStr);
+    NSURL *imageUrl = [NSURL URLWithString: model.contentImageUrlStr];
+    [self downLoadImageWithUrl:imageUrl andURLString:model.contentImageUrlStr];
     
-    [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    UIButton *senderBtn = sender;
+    
+    CGRect senderFrame = [senderBtn convertRect:senderBtn.bounds toView:self.navigationController.view];
+    
+    UIButton *imageDown = [UIButton buttonWithType:UIButtonTypeCustom];
+    [imageDown setBackgroundImage:[UIImage imageNamed:@"imageDownload"] forState:UIControlStateNormal];
+    imageDown.frame = senderFrame;
+    [self.navigationController.view addSubview:imageDown];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        imageDown.center = CGPointMake(senderFrame.origin.x + senderFrame.size.width / 2, senderFrame.origin.y + senderFrame.size.height / 2 + 20);
+        
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:1.5 animations:^{
+           
+            imageDown.frame = CGRectMake(0, 0, imageDown.frame.size.width / 2, imageDown.frame.size.height / 2);
+             imageDown.center = CGPointMake(30, 25);
+            imageDown.alpha = 0.7;
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.2 animations:^{
+                imageDown.center = CGPointMake(30, 35);
+                imageDown.alpha = 0.3;
+            } completion:^(BOOL finished) {
+                [imageDown removeFromSuperview];
+            }];
+        }];
+    }];
+
+}
+#pragma mark - 下载图片方法
+- (void)downLoadImageWithUrl:(NSURL *)url andURLString:(NSString *)str{
+    
+
+
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize) {
        
         NSLog(@"显示当前进度%ld" ,receivedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
         NSLog(@"下载完成,把图片保存到表中");
         
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+        
+        MBProgressHUD *hud = [[MBProgressHUD alloc]init];
+        [self.navigationController.view addSubview:hud];
+        hud.labelText = @"已保存至图库";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeCustomView;
+        [hud showAnimated:YES whileExecutingBlock:^{
+            sleep(1);
+        } completionBlock:^{
+            [hud endEditing:YES];
+            [hud removeFromSuperview];
+        }];
+        
+        /*
+//        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+//        NSString *picturePath = [cachePath stringByAppendingPathComponent:@"Picture"];
+//        NSFileManager *fm = [NSFileManager defaultManager];
+//        if (![fm fileExistsAtPath:picturePath]) {
+//            [fm createDirectoryAtPath:picturePath withIntermediateDirectories:YES attributes:nil error:nil];
+//            
+//        }
+
+//        NSString *imagePath = [picturePath stringByAppendingPathComponent:str];
+        
+        
+//        UIButton *bu = [UIButton buttonWithType:UIButtonTypeCustom];
+//        bu.frame = CGRectMake(100, 100, 100, 100);
+//
+//        NSString *imagepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle]bundlePath]] pathForResource:@"placeholderImage.gif" ofType:nil];
+//        NSData *imageData = [NSData dataWithContentsOfFile:imagepath];
+//        [bu setBackgroundImage:[UIImage sd_animatedGIFWithData:imageData] forState:UIControlStateNormal];
+//        
+//        [self.navigationController.view addSubview:bu];
+*/
+
+        
     }];
 }
-
 
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

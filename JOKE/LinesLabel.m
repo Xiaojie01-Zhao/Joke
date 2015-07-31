@@ -15,7 +15,7 @@
     
     [super layoutSubviews];
     
-    
+// 使用方法
 //label  number = 0 ；     Explicit 勾上    ，class ：LinesLabel   
     //设置label的preferredMaxLayoutWidth 使之等于当前设备的宽度
     if (self.numberOfLines == 0) {

@@ -160,7 +160,7 @@ static NSString *cellID = @"cell";
     NSLog(@"%@" , model);
 
     if (model.avatar_url != nil) {
-        [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil options:SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             
         }];
     }
@@ -170,7 +170,6 @@ static NSString *cellID = @"cell";
         cell.userName.text = @"匿名用户";
     }
     cell.contentLabel.text = model.content;
-
 
     
 }

@@ -48,6 +48,7 @@
 		348904561B6666B1002B9B72 /* PictureTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904551B6666B1002B9B72 /* PictureTableViewController.m */; };
 		348904591B666705002B9B72 /* PictureCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 348904581B666705002B9B72 /* PictureCell.m */; };
 		3489045C1B666718002B9B72 /* PictureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3489045B1B666718002B9B72 /* PictureModel.m */; };
+		3491B1161B6B795000F0557F /* placeholderImage.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3491B1151B6B795000F0557F /* placeholderImage.gif */; };
 		34CAA2231B69FEA000390E86 /* UIImage+BlurredFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CAA2201B69FEA000390E86 /* UIImage+BlurredFrame.m */; };
 		34CAA2241B69FEA000390E86 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CAA2221B69FEA000390E86 /* UIImage+ImageEffects.m */; };
 		34CAA2281B69FED600390E86 /* CXDynamicModuleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CAA2271B69FED600390E86 /* CXDynamicModuleView.m */; };
@@ -177,6 +178,7 @@
 		348904581B666705002B9B72 /* PictureCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PictureCell.m; sourceTree = "<group>"; };
 		3489045A1B666718002B9B72 /* PictureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PictureModel.h; sourceTree = "<group>"; };
 		3489045B1B666718002B9B72 /* PictureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PictureModel.m; sourceTree = "<group>"; };
+		3491B1151B6B795000F0557F /* placeholderImage.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = placeholderImage.gif; sourceTree = "<group>"; };
 		34CAA21F1B69FEA000390E86 /* UIImage+BlurredFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+BlurredFrame.h"; sourceTree = "<group>"; };
 		34CAA2201B69FEA000390E86 /* UIImage+BlurredFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+BlurredFrame.m"; sourceTree = "<group>"; };
 		34CAA2211B69FEA000390E86 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 		3489038F1B65D222002B9B72 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				34D605EC1B6B961D005D72F3 /* DownloadVC */,
 				34CAA2361B6A024100390E86 /* Menu */,
 				347DADAF1B67652700E2C318 /* Joke */,
 				347DADA51B67635400E2C318 /* Video */,
@@ -581,6 +584,13 @@
 			name = SDWeb;
 			sourceTree = "<group>";
 		};
+		34D605EC1B6B961D005D72F3 /* DownloadVC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DownloadVC;
+			sourceTree = "<group>";
+		};
 		34EA10361B637182004FC656 = {
 			isa = PBXGroup;
 			children = (
@@ -602,6 +612,7 @@
 		34EA10411B637182004FC656 /* JOKE */ = {
 			isa = PBXGroup;
 			children = (
+				3491B1151B6B795000F0557F /* placeholderImage.gif */,
 				3489038F1B65D222002B9B72 /* Sections */,
 				3489038E1B65D217002B9B72 /* General */,
 				3489038D1B65D205002B9B72 /* Helpers */,
@@ -725,6 +736,7 @@
 			files = (
 				34EA10511B637182004FC656 /* Main.storyboard in Resources */,
 				34EA10561B637182004FC656 /* LaunchScreen.xib in Resources */,
+				3491B1161B6B795000F0557F /* placeholderImage.gif in Resources */,
 				348904471B664B3D002B9B72 /* MJRefresh.bundle in Resources */,
 				34CAA2331B69FEFF00390E86 /* SelectView.xib in Resources */,
 				34EA10531B637182004FC656 /* Images.xcassets in Resources */,

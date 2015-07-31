@@ -26,6 +26,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.isOne = YES;
+    self.view.backgroundColor = [UIColor orangeColor];
 }
 - (IBAction)menuAction:(id)sender {
     

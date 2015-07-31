@@ -14,7 +14,7 @@
 #import "AFNetworking.h"
 #import "UIImageView+WebCache.h"
 #import "SDImageCache.h"
-
+#import "UIImage+GIF.h"
 // 刷新
 #import "MJRefreshNormalHeader.h"
 #import "MJRefreshBackNormalFooter.h"

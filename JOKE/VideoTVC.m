@@ -14,10 +14,16 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AVPalyerView.h"
 
+#import "AppDelegate.h"
+
 @interface VideoTVC ()
 {
    BOOL isRefresh;
 }
+
+@property (nonatomic , strong) AppDelegate *appDelegate;
+
+
 @property (nonatomic , strong) NSMutableArray *dataSource;
 
 // 视频
@@ -26,6 +32,9 @@
 @property (nonatomic , assign) BOOL isFirstTap;
 @property (nonatomic , assign) BOOL isPlayOrParse;
 @property (nonatomic , assign) BOOL isBigPlayer;
+
+// 视频文件名字
+@property (nonatomic , copy) NSString *movieName;
 // 保存视频的总时长
 @property (nonatomic , assign) CGFloat totalMovieDuration;
 @property (nonatomic , strong) NSURL *movieURL;
@@ -45,6 +54,10 @@ static NSString *cellID = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    self.appDelegate = [UIApplication sharedApplication].delegate;
+    
     
     self.isJuHua = YES;
     self.movieLong = 0;
@@ -199,7 +212,10 @@ static NSString *cellID = @"cell";
 }
 - (void)configureCell:(VideoCell *)cell forIndexPath:(NSIndexPath *)indexPath{
     VideoModel *model = self.dataSource[indexPath.row];
-    [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.userIcon]];
+    [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.userIcon] placeholderImage:nil options:SDWebImageProgressiveDownload | SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        
+    }];
+
     cell.nameLabel.text = model.name;
     cell.contentLabel.text = model.content;
     cell.contentImageView.userInteractionEnabled = YES;
@@ -211,7 +227,11 @@ static NSString *cellID = @"cell";
     CGSize size = CGSizeMake(model.width, model.height);
     cell.movieHeight.constant = imageWidth * size.height / size.width;
     
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] options:SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    NSString *imagepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle]bundlePath]] pathForResource:@"placeholderImage.gif" ofType:nil];
+    NSData *imageData = [NSData dataWithContentsOfFile:imagepath];
+    
+    
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] placeholderImage:[UIImage sd_animatedGIFWithData:imageData] options:SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         
     }];
     
@@ -320,19 +340,79 @@ static NSString *cellID = @"cell";
     VideoModel *model = self.dataSource[[self.tableView indexPathForCell:cell].row];
     NSURL *downloadMovieURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr]];
     NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *moviPath = [cachePath stringByAppendingPathComponent:@"Movie"];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:moviPath]) {
+        [fm createDirectoryAtPath:moviPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
     
-    NSString *file = [[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr] stringByReplacingOccurrencesOfString:@"/" withString:@""];
-    NSLog(@"%@" , file);
+    
+    self.movieName = [[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    NSLog(@"%@" , self.movieName);
     
     
-    NSString *filePath = [cachePath stringByAppendingPathComponent:file];
+    NSString *filePath = [moviPath stringByAppendingPathComponent:self.movieName];
     NSLog(@"视频下载路径%@" , filePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         
         //下载
         [self downloadMovieWithURL:downloadMovieURL andFilePath:filePath];
+        
+        MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
+        [self.avPlayerView addSubview:HUD];
+        
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"已添加到下载列表";
+        HUD.dimBackground = NO;
+        
+        [HUD showAnimated:YES whileExecutingBlock:^{
+            sleep(1.5)  ;
+        } completionBlock:^{
+            [HUD removeFromSuperview];
+        }];
+        
+        
+        // 下载动画
+       CGRect saveBtnFrame =  [self.avPlayerView.saveButton convertRect:self.avPlayerView.saveButton.bounds toView:self.navigationController.view];
+        UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        saveBtn.frame = saveBtnFrame;
+        [saveBtn setBackgroundImage:[UIImage imageNamed:@"缓存_plyer"] forState:UIControlStateNormal];
+        [self.navigationController.view addSubview:saveBtn];
+        
+        NSLog(@"++++++++++++++++++++ %f" , saveBtnFrame.origin.y);
+       [UIView animateWithDuration:0.2 animations:^{
+           saveBtn.center = CGPointMake(saveBtnFrame.size.width / 2 + saveBtnFrame.origin.x  , saveBtnFrame.origin.y + saveBtnFrame.size.height / 2 + 10);
+       } completion:^(BOOL finished) {
+           [UIView animateWithDuration:1.5 animations:^{
+               saveBtn.center = CGPointMake(30, 20);
+               saveBtn.alpha = 0.7;
+           } completion:^(BOOL finished) {
+               [UIView animateWithDuration:0.2 animations:^{
+                   saveBtn.center = CGPointMake(30, 30);
+                   saveBtn.alpha = 0.3;
+               } completion:^(BOOL finished) {
+                   [saveBtn removeFromSuperview];
+               }];
+           }];
+       }];
+        
     } else {
         NSLog(@"您已经下载过了");
+        
+        MBProgressHUD *hud = [[MBProgressHUD alloc]init];
+        [self.avPlayerView addSubview:hud];
+        
+        hud.mode = MBProgressHUDModeCustomView;
+        hud.labelText = @"您已经下载过了";
+        hud.dimBackground = NO;
+        [hud showAnimated:YES whileExecutingBlock:^{
+           
+            sleep(1.5);
+        } completionBlock:^{
+            [hud removeFromSuperview];
+        }];
+        
+        
     }
 }
 #pragma mark - 下载视频
@@ -357,10 +437,35 @@ static NSString *cellID = @"cell";
     // 下载完成后的回调
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"下载成功");
+        MBProgressHUD *hud = [[MBProgressHUD alloc]init];
+        [self.navigationController.view addSubview:hud];
+        hud.labelText = @"下载成功!";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud showAnimated:YES whileExecutingBlock:^{
+            sleep(1.5);
+        } completionBlock:^{
+            [hud endEditing:YES];
+            [hud removeFromSuperview];
+        }];
+        
+        // 把视频名字保存到表
+        [self saveMovieToTableWith:self.movieName];
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"下载失败");
+        MBProgressHUD *hud = [[MBProgressHUD alloc]init];
+        [self.navigationController.view addSubview:hud];
+        hud.labelText = @"下载失败!";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud showAnimated:YES whileExecutingBlock:^{
+            sleep(1.5);
+        } completionBlock:^{
+            [hud endEditing:YES];
+            [hud removeFromSuperview];
+        }];
     }];
     
     // 开启下载任务
@@ -368,6 +473,13 @@ static NSString *cellID = @"cell";
     // 或者创建一个对列
     NSOperationQueue *queue = [[NSOperationQueue alloc]init];
     [queue addOperation:operation];
+    
+}
+#pragma mark - 保存视频名字到表
+- (void)saveMovieToTableWith:(NSString *)movieName{
+    
+
+    
     
 }
 #pragma mark 轻拍手势的事件
@@ -420,8 +532,13 @@ static NSString *cellID = @"cell";
     
     NSLog(@"%@" , [sender.superview.superview.superview.superview class]);
     if (!self.isBigPlayer ) {
-        
-        
+
+        if (self.player.status  == AVPlayerStatusReadyToPlay) {
+            if (self.mb && self.movieLong != 0) {
+                [self.mb endEditing:YES];
+                [self.mb removeFromSuperview];
+            }
+        }
         // 播放
         [self.player play];
        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
@@ -436,6 +553,10 @@ static NSString *cellID = @"cell";
     } else {
         //  视屏播放器暂停
         [self.player pause];
+        if (self.mb) {
+            [self.mb endEditing:YES];
+            [self.mb removeFromSuperview];
+        }
         
         //  切换图片
         [sender setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
