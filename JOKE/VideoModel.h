@@ -16,4 +16,7 @@
 @property (nonatomic , copy) NSString *contentVideoUrlStr;
 @property (nonatomic , copy) NSString *contentPlaceholderImageUrlStr;
 
+@property (nonatomic ,assign) CGFloat width;
+@property (nonatomic , assign) CGFloat height;
+
 @end

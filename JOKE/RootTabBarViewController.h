@@ -1,5 +1,5 @@
 //
-//  MenuViewController.h
+//  RootTabBarViewController.h
 //  JOKE
 //
 //  Created by lanouhn on 15/7/30.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MenuViewController : UIViewController
+@interface RootTabBarViewController : UITabBarController
 
 @end

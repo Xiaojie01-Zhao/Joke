@@ -13,6 +13,8 @@
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 #import "AFNetworking.h"
 #import "UIImageView+WebCache.h"
+#import "SDImageCache.h"
+
 // 刷新
 #import "MJRefreshNormalHeader.h"
 #import "MJRefreshBackNormalFooter.h"
@@ -25,7 +27,7 @@
 
 // menu
 #import "CXDynamicModuleView.h"
-#import "MenuViewController.h"
+
 #import "CXDynamicModuleView.h"
 #import "SelectView.h"
 

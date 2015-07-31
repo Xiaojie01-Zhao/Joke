@@ -30,10 +30,6 @@
 static NSString *cellID = @"cell";
 
 @implementation ViewController
-- (IBAction)leftNAVAction:(id)sender {
-    
-    
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -164,7 +160,9 @@ static NSString *cellID = @"cell";
     NSLog(@"%@" , model);
 
     if (model.avatar_url != nil) {
-        [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil];
+        [cell.userIcon sd_setImageWithURL:[NSURL URLWithString:model.avatar_url] placeholderImage:nil options:SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+        }];
     }
     if (!model.name.length == 0) {
         cell.userName.text = model.name;

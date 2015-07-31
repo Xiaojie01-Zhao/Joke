@@ -14,6 +14,8 @@
     // Initialization code
     self.userIcon.layer.masksToBounds = YES;
     self.userIcon.layer.cornerRadius = self.userIcon.bounds.size.width / 2;
+    
+    [self.contentImageView setContentMode:UIViewContentModeScaleToFill];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

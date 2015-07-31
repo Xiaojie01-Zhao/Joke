@@ -31,22 +31,24 @@
 @property (nonatomic , strong) NSURL *movieURL;
 
 // 判断进度是否在东，也就是网速是否给力
-@property (nonatomic , assign) CGFloat isKale;
-
-
 @property (nonatomic , strong) MBProgressHUD *mb;
 
+@property (nonatomic , assign) BOOL isJuHua;
+
+@property (nonatomic , assign) CGFloat movieLong;
 
 @end
 
 static NSString *cellID = @"cell";
 
 @implementation VideoTVC
-- (IBAction)leftAction:(id)sender {
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isJuHua = YES;
+    self.movieLong = 0;
+    
     self.dataSource = [NSMutableArray array];
     [self getDataForVideo];
     
@@ -89,7 +91,15 @@ static NSString *cellID = @"cell";
             VideoModel *model = [[VideoModel alloc]init];
             
             NSDictionary *groupDic = allGroupDic[@"group"];
-            model.contentVideoUrlStr = groupDic[@"mp4_url"];
+//            model.contentVideoUrlStr = groupDic[@"mp4_url"];
+            NSDictionary *a480p_video = groupDic[@"480p_video"];
+            model.width = [a480p_video[@"width"] floatValue];
+            model.height = [a480p_video[@"height"] floatValue];
+            NSArray *url_listArr = a480p_video[@"url_list"];
+            NSDictionary *oneUrlDic = url_listArr[0];
+            model.contentVideoUrlStr = oneUrlDic[@"url"];
+            
+            
             model.content = groupDic[@"text"];
             
             NSDictionary *large_coverDic = groupDic[@"large_cover"];
@@ -135,7 +145,33 @@ static NSString *cellID = @"cell";
     // Return the number of rows in the section.
     return self.dataSource.count;
 }
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 350;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    ///*
+    static VideoCell *cell = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    });
+    
+    // 配置cell
+    [self configureCell:cell forIndexPath:indexPath];
+    
+    // 重新配置cell的bounds
+    cell.bounds = CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), CGRectGetHeight(tableView.bounds));
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
+    
+    // 计算cell的高度
+    CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
 
+   // */
+
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -167,28 +203,24 @@ static NSString *cellID = @"cell";
     cell.nameLabel.text = model.name;
     cell.contentLabel.text = model.content;
     cell.contentImageView.userInteractionEnabled = YES;
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    
+    
+    
+    // 给imageView的height赋值
+    CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 30;
+    CGSize size = CGSizeMake(model.width, model.height);
+    cell.movieHeight.constant = imageWidth * size.height / size.width;
+    
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] placeholderImage:[UIImage imageNamed:@"placeholderImage"] options:SDWebImageCacheMemoryOnly completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         
     }];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchContentImageView:)];
     [cell.contentImageView addGestureRecognizer:tap];
     
-//    UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    //
-//    playButton.frame = CGRectMake(cell.contentImageView.bounds.size.width / 2 - 30, cell.contentImageView.bounds.size.height / 2 - 30, 60, 60);
-//    [playButton setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
-//    [playButton addTarget:self action:@selector(playButtonActionsss:) forControlEvents:UIControlEventTouchUpInside];
-//    [cell.contentImageView addSubview:playButton];
     
 }
-//- (void)playButtonActionsss:(UIButton *)sender{
-//    [self.player play];
-//    [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
-//    
-//    self.isBigPlayer = YES;
-//
-//}
+
 #pragma mark - 滑动tableView
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -243,13 +275,11 @@ static NSString *cellID = @"cell";
     // 配置播放器功能
     [self configurePlayer:(VideoCell *)cell];
 }
-#pragma mark - cell点击事件 加载播放器
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
- 
 
-}
 - (void)configurePlayer:(VideoCell *)cell{
+    
+
+    
     
     // 观察是否播放完毕
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayDidEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
@@ -288,10 +318,10 @@ static NSString *cellID = @"cell";
     NSLog(@"%@" , [sender.superview.superview.superview.superview.superview class]);
     VideoCell *cell = (VideoCell *)sender.superview.superview.superview.superview.superview;
     VideoModel *model = self.dataSource[[self.tableView indexPathForCell:cell].row];
-    NSURL *downloadMovieURL = [NSURL URLWithString:model.contentVideoUrlStr];
+    NSURL *downloadMovieURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr]];
     NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     
-    NSString *file = [model.contentVideoUrlStr stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    NSString *file = [[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr] stringByReplacingOccurrencesOfString:@"/" withString:@""];
     NSLog(@"%@" , file);
     
     
@@ -374,18 +404,23 @@ static NSString *cellID = @"cell";
 #pragma  mark - big播放
 - (void)playMovieAction:(UIButton *)sender{
     
-    NSLog(@"%@" , [sender.superview.superview.superview.superview class]);
-    if (!self.isBigPlayer) {
-        // 菊花
-        self.isKale = YES;
-        self.mb = [[MBProgressHUD alloc]init];
-        [self.avPlayerView addSubview:_mb];
-        self.mb.labelText = @"加载中...";
-        self.mb.mode = MBProgressHUDModeIndeterminate;
-        _mb.dimBackground =  NO;
-        [self.mb show:YES];
-        
+    
+    
 
+    self.mb = [[MBProgressHUD alloc]init];
+    [self.avPlayerView addSubview:self.mb];
+    self.mb.labelText = @"缓冲中...";
+    self.mb.mode = MBProgressHUDModeIndeterminate;
+    self.mb.dimBackground = YES;
+    [self.mb show:YES];
+
+
+
+    
+    
+    NSLog(@"%@" , [sender.superview.superview.superview.superview class]);
+    if (!self.isBigPlayer ) {
+        
         
         // 播放
         [self.player play];
@@ -397,6 +432,7 @@ static NSString *cellID = @"cell";
             myself.avPlayerView.bigPlayButton.alpha  = 0;
             myself.avPlayerView.bottomOperationView.alpha = 0;
         }];
+        
     } else {
         //  视屏播放器暂停
         [self.player pause];
@@ -408,35 +444,7 @@ static NSString *cellID = @"cell";
 
     }
 }
-#pragma mark 播放或暂停
-//- (void)playButtonAction:(UIButton *)sender
-//{
-//    
-//    //  在这里你可以自己设置bool值来判断是否正在播放或者已经停止，也可以通过，播放器自带的rate属性，当rate为0时，为暂停，当rate为1时为正在播放
-//    
-//    if (!self.isPlayOrParse) {
-//        [self.player play];
-//        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
-//        self.isPlayOrParse = YES;
-//        
-//        __weak typeof(self) myself = self;
-//        [UIView animateWithDuration:.2f animations:^{
-//            
-//            myself.avPlayerView.bottomOperationView.alpha = 0;
-//            myself.isFirstTap = YES;
-//            
-//        }];
-//        
-//    } else{
-//        //  视屏播放器暂停
-//        [self.player pause];
-//        
-//        //  切换图片
-//        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
-//        self.isPlayOrParse = NO;
-//        
-//    }
-//}
+
 #pragma mark 调节进度
 - (void)scrubberIsScrolling:(UISlider *)sender
 {
@@ -485,6 +493,7 @@ static NSString *cellID = @"cell";
             
             [self addObserverToPlayerItem:item];
             
+          
         }
     }
     return _player;
@@ -498,15 +507,10 @@ static NSString *cellID = @"cell";
     //  设置每秒执行一次
     [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         
+        
+        
         //  获取当前的进度
         float current = CMTimeGetSeconds(time);
-        
-        // 在这判断网络不型
-//        if (mySelf.isKale == current) {
-//            
-//            NSLog(@"卡了");
-//        }
-//        mySelf.isKale = current;
         
         //  获取全部资源的大小
         float total = CMTimeGetSeconds([playerItem duration]);
@@ -548,12 +552,15 @@ static NSString *cellID = @"cell";
 }
 //  观察者的方法，会在加载好后触发，我们可以在这个方法中，保存总文件的大小，用于后面的进度的实现
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
+
     AVPlayerItem *playerItem=object;
     if ([keyPath isEqualToString:@"status"]) {
         AVPlayerStatus status= [[change objectForKey:@"new"] intValue];
         if(status==AVPlayerStatusReadyToPlay){
             NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
             
+
             CMTime totalTime = playerItem.duration;
             //因为slider的值是小数，要转成float，当前时间和总时间相除才能得到小数,因为5/10=0
             self.totalMovieDuration = (CGFloat)totalTime.value/totalTime.timescale;
@@ -574,6 +581,13 @@ static NSString *cellID = @"cell";
         }
     }else if([keyPath isEqualToString:@"loadedTimeRanges"]){
         
+        if (self.mb) {
+            [self.mb endEditing:YES];
+            [self.mb removeFromSuperview];
+            
+        }
+
+        
         NSArray *array=playerItem.loadedTimeRanges;
         CMTimeRange timeRange = [array.firstObject CMTimeRangeValue];//本次缓冲时间范围
         float startSeconds = CMTimeGetSeconds(timeRange.start);
@@ -582,11 +596,8 @@ static NSString *cellID = @"cell";
         NSLog(@"%.2f , %.2f" , startSeconds , durationSeconds);
         NSLog(@"共缓冲：%.2f",totalBuffer);
         //
-        
-        if (self.isKale && totalBuffer != 0) {
-            // 取消菊花
-            [self.mb hide:YES];
-        }
+        self.movieLong = totalBuffer;
+
     }
 }
 - (void)dealloc

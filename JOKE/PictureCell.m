@@ -16,13 +16,27 @@
     self.userIcon.layer.masksToBounds = YES;
     self.userIcon.layer.cornerRadius = self.userIcon.bounds.size.width / 2;
     
-    [self.contentImageView setClipsToBounds:YES];
+    
+
     [self.contentImageView setContentMode:UIViewContentModeScaleToFill];
-    [self.contentImageView setContentScaleFactor:[[UIScreen mainScreen] scale]];
 
-    self.contentImageView.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
-    NSLog(@"*************%f" , self.contentImageView.frame.size.width);
+    NSLog(@"_________________%f" , self.imageHeight.constant);
+    
+    
+    //    [self.contentImageView setClipsToBounds:YES];
+//    [self.contentImageView setContentScaleFactor:[[UIScreen mainScreen] scale]];
+//
+//    self.contentImageView.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
+//    NSLog(@"*************%f" , self.contentImageView.frame.size.width);
+//    self.contentImageView.frame = CGRectMake(10, 10, 100, 100);
+// NSLog(@"%f" , self.userIcon.frame.origin.x);
+}
 
+- (CGFloat)jisuanCellHeight{
+    
+    CGRect rect = [self.contentLabel.text boundingRectWithSize:CGSizeMake(self.contentLabel.frame.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil];
+    CGFloat height = 66 + rect.size.height + 15 + self.contentImageView.frame.size.height + 15;
+    return height;
 }
 - (void)setNeedsDisplay{
     

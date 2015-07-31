@@ -31,7 +31,7 @@
     return self;
 }
 
-- (UIView *)loadDynamicModuleView:(UIView *)superView
+- (UIView *)loadDynamicModuleView:(UIView *)superView 
 {
     UIImage *img  = [self getLucencyImage:[self captureScreen:superView]];
     UIImageView *bgselectTeamView  = [[UIImageView alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -166,6 +166,10 @@
                         UIImageView *bgselectTeamView = (UIImageView *)[self viewWithTag:10001];
                         [bgselectTeamView removeFromSuperview];
                         [self removeFromSuperview];
+#pragma mark - 传值
+                        if (self.myBlock) {
+                            self.myBlock(YES);
+                        }
                     }
                 }];
             }

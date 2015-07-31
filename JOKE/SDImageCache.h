@@ -43,6 +43,16 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
 @property (assign, nonatomic) BOOL shouldDecompressImages;
 
 /**
+ *  disable iCloud backup [defaults to YES]
+ */
+@property (assign, nonatomic) BOOL shouldDisableiCloud;
+
+/**
+ * use memory cache [defaults to YES]
+ */
+@property (assign, nonatomic) BOOL shouldCacheImagesInMemory;
+
+/**
  * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.
  */
 @property (assign, nonatomic) NSUInteger maxMemoryCost;
@@ -75,6 +85,14 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
  * @param ns The namespace to use for this cache store
  */
 - (id)initWithNamespace:(NSString *)ns;
+
+/**
+ * Init a new cache store with a specific namespace and directory
+ *
+ * @param ns        The namespace to use for this cache store
+ * @param directory Directory to cache disk images in
+ */
+- (id)initWithNamespace:(NSString *)ns diskCacheDirectory:(NSString *)directory;
 
 -(NSString *)makeDiskCachePath:(NSString*)fullNamespace;
 
@@ -146,7 +164,7 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
 
 
 /**
- * Remove the image from memory and disk cache synchronously
+ * Remove the image from memory and disk cache asynchronously
  *
  * @param key             The unique image cache key
  * @param completion      An block that should be executed after the image has been removed (optional)
@@ -154,7 +172,7 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
 - (void)removeImageForKey:(NSString *)key withCompletion:(SDWebImageNoParamsBlock)completion;
 
 /**
- * Remove the image from memory and optionally disk cache synchronously
+ * Remove the image from memory and optionally disk cache asynchronously
  *
  * @param key      The unique image cache key
  * @param fromDisk Also remove cache entry from disk if YES
@@ -162,7 +180,7 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
 - (void)removeImageForKey:(NSString *)key fromDisk:(BOOL)fromDisk;
 
 /**
- * Remove the image from memory and optionally disk cache synchronously
+ * Remove the image from memory and optionally disk cache asynchronously
  *
  * @param key             The unique image cache key
  * @param fromDisk        Also remove cache entry from disk if YES

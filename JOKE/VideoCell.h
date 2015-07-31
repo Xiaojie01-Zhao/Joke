@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet LinesLabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *contentImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *movieHeight;
 
 @end
