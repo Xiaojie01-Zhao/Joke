@@ -2,7 +2,7 @@
 //  Movie.m
 //  JOKE
 //
-//  Created by lanouhn on 15/8/1.
+//  Created by lanouhn on 15/8/3.
 //  Copyright (c) 2015年 ACE--赵肖杰. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 @implementation Movie
 
-@dynamic movieName;
 @dynamic movieImageName;
+@dynamic movieName;
 
 @end

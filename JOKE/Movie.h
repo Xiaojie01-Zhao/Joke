@@ -2,7 +2,7 @@
 //  Movie.h
 //  JOKE
 //
-//  Created by lanouhn on 15/8/1.
+//  Created by lanouhn on 15/8/3.
 //  Copyright (c) 2015年 ACE--赵肖杰. All rights reserved.
 //
 
@@ -12,7 +12,7 @@
 
 @interface Movie : NSManagedObject
 
-@property (nonatomic, retain) NSString * movieName;
 @property (nonatomic, retain) NSString * movieImageName;
+@property (nonatomic, retain) NSString * movieName;
 
 @end

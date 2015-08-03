@@ -16,9 +16,11 @@
     BOOL isDelete;
 }
 @property (nonatomic , strong) NSMutableArray *dataSourceImage;
-@property (nonatomic , strong) NSMutableArray *dataSourceMovie;
+
 @property (nonatomic , strong) AppDelegate *appdelegate;
+
 @property (nonatomic , strong) UICollectionView *collectionView;
+@property (nonatomic , strong) WaterFlowLayout *waterLayout;
 
 @property (nonatomic , strong) UIButton *deleteButton;
 @property (nonatomic , assign) NSInteger deleteIndexPath;
@@ -31,17 +33,17 @@ static NSString *cellID = @"waterCell";
     [super viewDidLoad];
 
     self.dataSourceImage = [NSMutableArray array];
-    self.dataSourceMovie = [NSMutableArray array];
+
     self.view.backgroundColor = [UIColor whiteColor];
     self.appdelegate = [UIApplication sharedApplication ].delegate;
     
-    WaterFlowLayout *waterLayout = [[WaterFlowLayout alloc]init];
-    waterLayout.numberOfColumns = 2;
-    waterLayout.itemWidth = (CGRectGetWidth(self.view.bounds) - 15) / 2;
-    waterLayout.sectionIndexs = UIEdgeInsetsMake(5, 5, 5, 5);
-    waterLayout.delegate = self;
+    self.waterLayout = [[WaterFlowLayout alloc]init];
+    self.waterLayout.numberOfColumns = 2;
+    self.waterLayout.itemWidth = (CGRectGetWidth(self.view.bounds) - 15) / 2;
+    self.waterLayout.sectionIndexs = UIEdgeInsetsMake(5, 5, 5, 5);
+    self.waterLayout.delegate = self;
     
-    self.collectionView = [[UICollectionView alloc]initWithFrame:self.view.bounds collectionViewLayout:waterLayout];
+    self.collectionView = [[UICollectionView alloc]initWithFrame:self.view.bounds collectionViewLayout:self.waterLayout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     
@@ -51,49 +53,51 @@ static NSString *cellID = @"waterCell";
     
     
     
-    self.deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.deleteButton.frame = CGRectMake(self.view.bounds.size.width / 2 - 50, 0, 30, 30);
-    self.deleteButton.backgroundColor = [UIColor redColor];
-    [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    
     [self.collectionView registerClass:[WeaterFlowCell class] forCellWithReuseIdentifier:cellID];
     [self.view addSubview:self.collectionView];
     [self getDataForFile];
     
     
-    
+    self.deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.deleteButton.frame = CGRectMake(self.view.bounds.size.width / 2 - 50, 0, 40, 40);
+    self.deleteButton.backgroundColor = [UIColor redColor];
+    self.deleteButton.hidden = YES;
+    [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
+
+
+
     
 }
+
 - (void)getDataForFile{
     
     NSFetchRequest *fet = [NSFetchRequest fetchRequestWithEntityName:@"Movie"];
     
     NSArray *dataArr = [self.appdelegate.managedObjectContext executeFetchRequest:fet error:nil];
     
-    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+
     for (Movie *movieModel in dataArr) {
-        
-        NSString *imagePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , movieModel.movieImageName]];
-        [self.dataSourceImage addObject:imagePath];
-
-        NSString *moviePath = [cachePath stringByAppendingString:[NSString stringWithFormat:@"Movie/%@" , movieModel.movieName]];
-        [self.dataSourceMovie addObject:moviePath];
-
+        [self.dataSourceImage addObject:movieModel];
     }
     
 }
 #pragma mark - UICollectionView delegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    NSLog(@"%ld" , self.dataSourceImage.count);
+    NSLog(@"item个数:%ld" , self.dataSourceImage.count);
     return [self.dataSourceImage count];
     
 }
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+    NSLog(@"%ld", self.dataSourceImage.count);
     WeaterFlowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
-    cell.imageView.image = [UIImage imageWithContentsOfFile:self.dataSourceImage[indexPath.row]];
+    
+    
+    
+    Movie *movieModel = self.dataSourceImage[indexPath.row];
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *imagePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , movieModel.movieImageName]];
+    
+    cell.imageView.image = [UIImage imageWithContentsOfFile:imagePath];
  
     
     return cell;
@@ -102,15 +106,17 @@ static NSString *cellID = @"waterCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
-//    NSLog(@"%ld" , indexPath.row);
-    
-    MPMoviePlayerViewController *mp = [[MPMoviePlayerViewController alloc]initWithContentURL:[NSURL fileURLWithPath:self.dataSourceMovie[indexPath.row]]];
+    NSLog(@"%ld" , indexPath.row);
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    Movie *model = self.dataSourceImage[indexPath.row];
+    NSString *moviePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , model.movieName]];
+    MPMoviePlayerViewController *mp = [[MPMoviePlayerViewController alloc]initWithContentURL:[NSURL fileURLWithPath:moviePath]];
     [self presentViewController:mp animated:YES completion:nil];
 
 }
 // 移动
 - (void)longPressAction:(UILongPressGestureRecognizer *)sender{
-    
+
     static NSIndexPath *sourceIndexPath = nil;
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:{
@@ -120,8 +126,12 @@ static NSString *cellID = @"waterCell";
             [cell addSubview:self.deleteButton];
             self.deleteIndexPath = indexPath.row + 1000;
             sourceIndexPath = indexPath;
-            [self.deleteButton bringSubviewToFront:self.collectionView];
+//            [self.deleteButton bringSubviewToFront:self.collectionView];
             self.deleteButton.tag = indexPath.row + 1000;
+            
+            
+
+            
         }
             break;
           case UIGestureRecognizerStateEnded:
@@ -137,30 +147,58 @@ static NSString *cellID = @"waterCell";
         default:
             break;
     }
+ 
+    
 }
 #pragma mark - 删除
 - (void)deleteAction:(UIButton *)sender{
     
     NSLog(@"%@" , [sender.superview class]);
     
-    WeaterFlowCell *cell = (WeaterFlowCell *)sender.superview;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag - 1000 inSection:0];
+    NSLog(@"____________________%ld" , sender.tag - 1000);
 
-    [self.dataSourceImage removeObjectAtIndex:indexPath.row];
-    [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
-
-
-}
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender{
-    return YES;
-}
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender{
+    NSLog(@"%@" , self.dataSourceImage[sender.tag - 1000]);
     
+        Movie *movieModel = self.dataSourceImage[sender.tag - 1000];
+
+        NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        NSString *imagePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , movieModel.movieImageName]];
+        NSString *moviePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , movieModel.movieName]];
+        
+        NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error;
+    NSLog(@"图片路径：%@" , imagePath);
+    NSLog(@"视频路径：%@" , moviePath);
+        [fm removeItemAtPath:imagePath error:&error];
+        [fm removeItemAtPath:moviePath error:&error];
+    if (error) {
+        NSLog(@"%@" , error);
+    }
+    [self.appdelegate.managedObjectContext deleteObject:movieModel];
+    [self.appdelegate.managedObjectContext save:nil];
+
+        [self.dataSourceImage removeObjectAtIndex:sender.tag - 1000];
+//
+        [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+
+//    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+    
+//    [self.dataSourceImage removeAllObjects];
+//    [self getDataForFile];
+//    [self.collectionView reloadData];
+
+
 }
-#pragma mark - Layout Delegate 
+
+
+#pragma mark - Layout Delegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView waterFlowLayout:(WaterFlowLayout *)waterFlowLayout heightForIndexPath:(NSIndexPath *)indexPath{
     
-    NSString *imagePath = self.dataSourceImage[indexPath.row];
+
+    Movie *model = self.dataSourceImage[indexPath.row];
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *imagePath = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"Movie/%@" , model.movieImageName]];
     UIImage *image =  [UIImage imageWithContentsOfFile:imagePath];
     
     CGFloat imageHeight = waterFlowLayout.itemWidth * image.size.height / image.size.width;

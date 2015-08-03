@@ -131,6 +131,7 @@ static NSString *cellID = @"cell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     PictureCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID forIndexPath:indexPath];
+
     
     [self configurationCellForCell:cell forIndexPath:indexPath];
     return cell;
