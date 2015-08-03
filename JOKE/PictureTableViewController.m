@@ -150,10 +150,12 @@ static NSString *cellID = @"cell";
     }
     cell.contentLabel.text = model.content;
 
+    // 图片自适应高度
     CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 30;
       CGSize size = CGSizeMake(model.width, model.height);
     cell.imageHeight.constant = imageWidth * size.height / size.width;
     
+    // gif 占位符
     NSString *imagepath = [[NSBundle bundleWithPath:[[NSBundle mainBundle]bundlePath]] pathForResource:@"placeholderImage.gif" ofType:nil];
     NSData *imageData = [NSData dataWithContentsOfFile:imagepath];
 
@@ -280,7 +282,7 @@ static NSString *cellID = @"cell";
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeCustomView;
         [hud showAnimated:YES whileExecutingBlock:^{
-            sleep(1);
+            sleep(2);
         } completionBlock:^{
             [hud endEditing:YES];
             [hud removeFromSuperview];

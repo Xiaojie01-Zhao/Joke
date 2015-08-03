@@ -7,6 +7,8 @@
 //
 
 #import "RootTabBarViewController.h"
+#import "DownloadViewController.h"
+#import "WaterFlowViewController.h"
 
 @interface RootTabBarViewController () <MBProgressHUDDelegate>
 {
@@ -71,6 +73,10 @@
                     if ([view.teamName.text isEqualToString:@"下载列表"]) {
                         
                         NSLog(@"下载");
+//                        DownloadViewController *downloadVC = [[DownloadViewController alloc]init];
+//                        [self presentViewController:downloadVC animated:YES completion:nil];
+                        WaterFlowViewController *waterVC = [[WaterFlowViewController alloc]init];
+                        [self.navigationController showViewController:waterVC sender:nil];
 
                     }
                     if ([view.teamName.text isEqualToString:@"夜间模式"]) {

@@ -14,7 +14,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AVPalyerView.h"
 
-#import "AppDelegate.h"
+#import <MediaPlayer/MediaPlayer.h>
+
 
 @interface VideoTVC ()
 {
@@ -35,6 +36,7 @@
 
 // 视频文件名字
 @property (nonatomic , copy) NSString *movieName;
+@property (nonatomic , copy) NSString *movieImageName;
 // 保存视频的总时长
 @property (nonatomic , assign) CGFloat totalMovieDuration;
 @property (nonatomic , strong) NSURL *movieURL;
@@ -339,6 +341,8 @@ static NSString *cellID = @"cell";
     VideoCell *cell = (VideoCell *)sender.superview.superview.superview.superview.superview;
     VideoModel *model = self.dataSource[[self.tableView indexPathForCell:cell].row];
     NSURL *downloadMovieURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr]];
+    
+   
     NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     NSString *moviPath = [cachePath stringByAppendingPathComponent:@"Movie"];
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -348,15 +352,22 @@ static NSString *cellID = @"cell";
     
     
     self.movieName = [[NSString stringWithFormat:@"%@.mp4", model.contentVideoUrlStr] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    self.movieName = [self.movieName stringByReplacingOccurrencesOfString:@":" withString:@""];
     NSLog(@"%@" , self.movieName);
+    self.movieImageName = [[NSString stringWithFormat:@"%@.png" , model.contentPlaceholderImageUrlStr] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    self.movieImageName = [self.movieImageName stringByReplacingOccurrencesOfString:@":" withString:@""];
     
     
     NSString *filePath = [moviPath stringByAppendingPathComponent:self.movieName];
+    NSString *movieImagePath = [moviPath stringByAppendingPathComponent:self.movieImageName];
+    
     NSLog(@"视频下载路径%@" , filePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         
         //下载
-        [self downloadMovieWithURL:downloadMovieURL andFilePath:filePath];
+        [self downloadMovieWithURL:downloadMovieURL andFilePath:filePath downloadImageWithURL:[NSURL URLWithString:model.contentPlaceholderImageUrlStr] andImageFilePath: movieImagePath];
+        // 把视频名字保存到表
+        [self saveMovieToTableWith:self.movieName andMovieImageName:self.movieImageName];
         
         MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
         [self.avPlayerView addSubview:HUD];
@@ -415,11 +426,31 @@ static NSString *cellID = @"cell";
         
     }
 }
-#pragma mark - 下载视频
-- (void)downloadMovieWithURL:(NSURL *)url andFilePath:(NSString *)filePath{
+#pragma mark - 下载视频的截图
+- (void)downloadMovieImageWithURL:(NSURL *)url andFilePath:(NSString *)filePath{
     
+    NSURLRequest *requset = [NSURLRequest requestWithURL:url];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:requset];
+    operation.outputStream = [[NSOutputStream alloc]initToFileAtPath:filePath append:YES];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+       
+        NSLog(@"下载视频图片成功");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+#pragma mark - 下载视频
+- (void)downloadMovieWithURL:(NSURL *)url andFilePath:(NSString *)filePath downloadImageWithURL:(NSURL *)imageUrl andImageFilePath:(NSString *)imageFilePath{
+    
+    // 视频
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:-1];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:request];
+    
+    // 视频截图
+    NSURLRequest *imageRequset = [NSURLRequest requestWithURL:imageUrl];
+    AFHTTPRequestOperation *imageOperation = [[AFHTTPRequestOperation alloc]initWithRequest:imageRequset];
+    
     
     // 下载中 的方法，我们用它可以用来 观察进度，做一个进度条
 //    __weak typeof(self) weakSelf = self;
@@ -433,6 +464,7 @@ static NSString *cellID = @"cell";
     
     // 赋值url
     operation.outputStream = [[NSOutputStream alloc]initToFileAtPath:filePath append:YES];
+    imageOperation.outputStream = [[NSOutputStream alloc]initToFileAtPath:imageFilePath append:YES];
     
     // 下载完成后的回调
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -449,8 +481,7 @@ static NSString *cellID = @"cell";
             [hud removeFromSuperview];
         }];
         
-        // 把视频名字保存到表
-        [self saveMovieToTableWith:self.movieName];
+        
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -473,13 +504,17 @@ static NSString *cellID = @"cell";
     // 或者创建一个对列
     NSOperationQueue *queue = [[NSOperationQueue alloc]init];
     [queue addOperation:operation];
-    
+    [queue addOperation:imageOperation];
 }
 #pragma mark - 保存视频名字到表
-- (void)saveMovieToTableWith:(NSString *)movieName{
+- (void)saveMovieToTableWith:(NSString *)movieName andMovieImageName:(NSString *)movieImageName{
     
 
+    Movie *movie = [NSEntityDescription insertNewObjectForEntityForName:@"Movie" inManagedObjectContext:self.appDelegate.managedObjectContext];
+    movie.movieName = movieName;
+    movie.movieImageName = movieImageName;
     
+    [self.appDelegate saveContext];
     
 }
 #pragma mark 轻拍手势的事件

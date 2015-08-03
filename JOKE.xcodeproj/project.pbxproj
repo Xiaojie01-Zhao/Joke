@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		344E48EB1B6C5D3C0007353C /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E48E91B6C5D3C0007353C /* DownloadViewController.m */; };
+		344E48EC1B6C5D3C0007353C /* DownloadViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 344E48EA1B6C5D3C0007353C /* DownloadViewController.xib */; };
+		344E48EF1B6C5FC90007353C /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E48EE1B6C5FC90007353C /* iCarousel.m */; };
+		344E48F51B6C79120007353C /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 344E48F41B6C79120007353C /* image.png */; };
+		344E48FE1B6CA1450007353C /* LBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E48FD1B6CA1450007353C /* LBorderView.m */; };
+		344E49011B6CB6500007353C /* Movie.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E49001B6CB6500007353C /* Movie.m */; };
+		344E49051B6CCD860007353C /* WaterFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E49041B6CCD860007353C /* WaterFlowLayout.m */; };
+		344E49091B6CCDC50007353C /* WeaterFlowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E49081B6CCDC50007353C /* WeaterFlowCell.m */; };
+		344E490C1B6CDE2D0007353C /* WaterFlowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344E490B1B6CDE2D0007353C /* WaterFlowViewController.m */; };
 		3478588A1B68AD560034696F /* AVPalyerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 347858891B68AD560034696F /* AVPalyerView.m */; };
 		347858CB1B69D6D10034696F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 347858CA1B69D6D10034696F /* MBProgressHUD.m */; };
 		347DADA81B6764D100E2C318 /* VideoTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 347DADA71B6764D100E2C318 /* VideoTVC.m */; };
@@ -94,6 +103,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		344E48E81B6C5D3C0007353C /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
+		344E48E91B6C5D3C0007353C /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		344E48EA1B6C5D3C0007353C /* DownloadViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadViewController.xib; sourceTree = "<group>"; };
+		344E48ED1B6C5FC90007353C /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
+		344E48EE1B6C5FC90007353C /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		344E48F41B6C79120007353C /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
+		344E48FC1B6CA1450007353C /* LBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBorderView.h; sourceTree = "<group>"; };
+		344E48FD1B6CA1450007353C /* LBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBorderView.m; sourceTree = "<group>"; };
+		344E48FF1B6CB6500007353C /* Movie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Movie.h; sourceTree = "<group>"; };
+		344E49001B6CB6500007353C /* Movie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Movie.m; sourceTree = "<group>"; };
+		344E49031B6CCD860007353C /* WaterFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterFlowLayout.h; sourceTree = "<group>"; };
+		344E49041B6CCD860007353C /* WaterFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterFlowLayout.m; sourceTree = "<group>"; };
+		344E49071B6CCDC50007353C /* WeaterFlowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeaterFlowCell.h; sourceTree = "<group>"; };
+		344E49081B6CCDC50007353C /* WeaterFlowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeaterFlowCell.m; sourceTree = "<group>"; };
+		344E490A1B6CDE2D0007353C /* WaterFlowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterFlowViewController.h; sourceTree = "<group>"; };
+		344E490B1B6CDE2D0007353C /* WaterFlowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterFlowViewController.m; sourceTree = "<group>"; };
 		347858881B68AD560034696F /* AVPalyerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPalyerView.h; sourceTree = "<group>"; };
 		347858891B68AD560034696F /* AVPalyerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPalyerView.m; sourceTree = "<group>"; };
 		347858C91B69D6D10034696F /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -261,6 +286,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		344E49021B6CCB5E0007353C /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				344E48ED1B6C5FC90007353C /* iCarousel.h */,
+				344E48EE1B6C5FC90007353C /* iCarousel.m */,
+			);
+			name = Download;
+			sourceTree = "<group>";
+		};
+		344E49061B6CCD9D0007353C /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				344E49071B6CCDC50007353C /* WeaterFlowCell.h */,
+				344E49081B6CCDC50007353C /* WeaterFlowCell.m */,
+			);
+			name = Download;
+			sourceTree = "<group>";
+		};
 		347858C61B69B6660034696F /* Joke */ = {
 			isa = PBXGroup;
 			children = (
@@ -317,7 +360,10 @@
 		3489038D1B65D205002B9B72 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				34CAA24C1B6A2D6B00390E86 /* SDWeb */,
+				344E49021B6CCB5E0007353C /* Download */,
+				344E48FC1B6CA1450007353C /* LBorderView.h */,
+				344E48FD1B6CA1450007353C /* LBorderView.m */,
+				34CAA24C1B6A2D6B00390E86 /* SDWebImage */,
 				34CAA21E1B69FE7700390E86 /* Menu */,
 				347858C91B69D6D10034696F /* MBProgressHUD.h */,
 				347858CA1B69D6D10034696F /* MBProgressHUD.m */,
@@ -332,6 +378,7 @@
 		3489038E1B65D217002B9B72 /* General */ = {
 			isa = PBXGroup;
 			children = (
+				344E49061B6CCD9D0007353C /* Download */,
 				347858C81B69B6840034696F /* Video */,
 				347858C71B69B6710034696F /* Picture */,
 				347858C61B69B6660034696F /* Joke */,
@@ -544,7 +591,7 @@
 			name = Menu;
 			sourceTree = "<group>";
 		};
-		34CAA24C1B6A2D6B00390E86 /* SDWeb */ = {
+		34CAA24C1B6A2D6B00390E86 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
 				34CAA24D1B6A2D7C00390E86 /* MKAnnotationView+WebCache.h */,
@@ -581,12 +628,19 @@
 				34CAA26C1B6A2D7C00390E86 /* UIView+WebCacheOperation.h */,
 				34CAA26D1B6A2D7C00390E86 /* UIView+WebCacheOperation.m */,
 			);
-			name = SDWeb;
+			name = SDWebImage;
 			sourceTree = "<group>";
 		};
 		34D605EC1B6B961D005D72F3 /* DownloadVC */ = {
 			isa = PBXGroup;
 			children = (
+				344E48E81B6C5D3C0007353C /* DownloadViewController.h */,
+				344E48E91B6C5D3C0007353C /* DownloadViewController.m */,
+				344E48EA1B6C5D3C0007353C /* DownloadViewController.xib */,
+				344E490A1B6CDE2D0007353C /* WaterFlowViewController.h */,
+				344E490B1B6CDE2D0007353C /* WaterFlowViewController.m */,
+				344E49031B6CCD860007353C /* WaterFlowLayout.h */,
+				344E49041B6CCD860007353C /* WaterFlowLayout.m */,
 			);
 			name = DownloadVC;
 			sourceTree = "<group>";
@@ -613,6 +667,7 @@
 			isa = PBXGroup;
 			children = (
 				3491B1151B6B795000F0557F /* placeholderImage.gif */,
+				344E48F41B6C79120007353C /* image.png */,
 				3489038F1B65D222002B9B72 /* Sections */,
 				3489038E1B65D217002B9B72 /* General */,
 				3489038D1B65D205002B9B72 /* Helpers */,
@@ -622,6 +677,8 @@
 				34EA10521B637182004FC656 /* Images.xcassets */,
 				34EA10541B637182004FC656 /* LaunchScreen.xib */,
 				34EA10491B637182004FC656 /* JOKE.xcdatamodeld */,
+				344E48FF1B6CB6500007353C /* Movie.h */,
+				344E49001B6CB6500007353C /* Movie.m */,
 				34EA10421B637182004FC656 /* Supporting Files */,
 				348904501B664E97002B9B72 /* PrefixHeader.pch */,
 			);
@@ -739,7 +796,9 @@
 				3491B1161B6B795000F0557F /* placeholderImage.gif in Resources */,
 				348904471B664B3D002B9B72 /* MJRefresh.bundle in Resources */,
 				34CAA2331B69FEFF00390E86 /* SelectView.xib in Resources */,
+				344E48EC1B6C5D3C0007353C /* DownloadViewController.xib in Resources */,
 				34EA10531B637182004FC656 /* Images.xcassets in Resources */,
+				344E48F51B6C79120007353C /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +825,7 @@
 				348904401B664B3D002B9B72 /* MJRefreshAutoStateFooter.m in Sources */,
 				347858CB1B69D6D10034696F /* MBProgressHUD.m in Sources */,
 				348904041B660DAC002B9B72 /* LinesLabel.m in Sources */,
+				344E48FE1B6CA1450007353C /* LBorderView.m in Sources */,
 				3478588A1B68AD560034696F /* AVPalyerView.m in Sources */,
 				348903CF1B65DD34002B9B72 /* AFURLSessionManager.m in Sources */,
 				3489043E1B664B3D002B9B72 /* MJRefreshAutoGifFooter.m in Sources */,
@@ -778,6 +838,7 @@
 				34CAA2771B6A2D7C00390E86 /* UIButton+WebCache.m in Sources */,
 				34CAA2341B69FEFF00390E86 /* BaseButton.m in Sources */,
 				3489045C1B666718002B9B72 /* PictureModel.m in Sources */,
+				344E49091B6CCDC50007353C /* WeaterFlowCell.m in Sources */,
 				348903921B65D263002B9B72 /* JokeCell.m in Sources */,
 				348904391B664B3D002B9B72 /* MJRefreshAutoFooter.m in Sources */,
 				34CAA2761B6A2D7C00390E86 /* SDWebImagePrefetcher.m in Sources */,
@@ -786,12 +847,14 @@
 				348903CC1B65DD34002B9B72 /* AFURLConnectionOperation.m in Sources */,
 				348903C91B65DD34002B9B72 /* AFHTTPSessionManager.m in Sources */,
 				348903CD1B65DD34002B9B72 /* AFURLRequestSerialization.m in Sources */,
+				344E48EB1B6C5D3C0007353C /* DownloadViewController.m in Sources */,
 				348904421B664B3D002B9B72 /* MJRefreshBackNormalFooter.m in Sources */,
 				348904441B664B3D002B9B72 /* MJRefreshGifHeader.m in Sources */,
 				34CAA2721B6A2D7C00390E86 /* SDWebImageDecoder.m in Sources */,
 				34CAA2321B69FEFF00390E86 /* SelectView.m in Sources */,
 				348904431B664B3D002B9B72 /* MJRefreshBackStateFooter.m in Sources */,
 				348904071B662014002B9B72 /* AnimationButton.m in Sources */,
+				344E49051B6CCD860007353C /* WaterFlowLayout.m in Sources */,
 				3489044B1B664B3D002B9B72 /* UIView+MJExtension.m in Sources */,
 				3489043F1B664B3D002B9B72 /* MJRefreshAutoNormalFooter.m in Sources */,
 				34CAA2231B69FEA000390E86 /* UIImage+BlurredFrame.m in Sources */,
@@ -810,12 +873,15 @@
 				347DADA81B6764D100E2C318 /* VideoTVC.m in Sources */,
 				3489043D1B664B3D002B9B72 /* MJRefreshHeader.m in Sources */,
 				347DADAE1B67650000E2C318 /* VideoModel.m in Sources */,
+				344E49011B6CB6500007353C /* Movie.m in Sources */,
 				348903CE1B65DD34002B9B72 /* AFURLResponseSerialization.m in Sources */,
 				347DADAB1B6764E800E2C318 /* VideoCell.m in Sources */,
 				348904591B666705002B9B72 /* PictureCell.m in Sources */,
 				34CAA2791B6A2D7C00390E86 /* UIImage+MultiFormat.m in Sources */,
 				348904411B664B3D002B9B72 /* MJRefreshBackGifFooter.m in Sources */,
 				34CAA2241B69FEA000390E86 /* UIImage+ImageEffects.m in Sources */,
+				344E490C1B6CDE2D0007353C /* WaterFlowViewController.m in Sources */,
+				344E48EF1B6C5FC90007353C /* iCarousel.m in Sources */,
 				34CAA23C1B6A180400390E86 /* RootTabBarViewController.m in Sources */,
 				34CAA2751B6A2D7C00390E86 /* SDWebImageManager.m in Sources */,
 				34CAA2731B6A2D7C00390E86 /* SDWebImageDownloader.m in Sources */,
