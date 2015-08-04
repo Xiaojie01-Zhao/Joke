@@ -18,6 +18,8 @@
 }
 @property (nonatomic , strong) NSMutableArray *dataSource;
 
+@property (nonatomic , strong) UIButton *button;
+
 @end
 
 static NSString *cellID = @"cell";
@@ -28,6 +30,7 @@ static NSString *cellID = @"cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
     self.dataSource = [NSMutableArray array];
     
     [self getDataFromPicture];
@@ -55,10 +58,25 @@ static NSString *cellID = @"cell";
         });
         
     }];
+    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.button.frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 100, 30, 45);
+    [self.button addTarget:self action:@selector(goTop:) forControlEvents:UIControlEventTouchUpInside];
+    //    button.backgroundColor = [UIColor greenColor];
+    [self.button setBackgroundImage:[UIImage imageNamed:@"top"] forState:UIControlStateNormal];
+    [self.navigationController.view addSubview:self.button];
+    
+    
+    
+}
+- (void)goTop:(UIButton *)sender{
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionTop];
+    
 }
 - (void)viewWillAppear:(BOOL)animated{
-   
+    self.button.hidden = NO;
 }
+
+
 - (void)getDataFromPicture{
     
     AFHTTPRequestOperationManager *manage = [AFHTTPRequestOperationManager manager];
@@ -163,7 +181,7 @@ static NSString *cellID = @"cell";
 
     
     [cell.contentImageView setContentMode:UIViewContentModeScaleToFill];
-    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage sd_animatedGIFWithData:imageData] options:SDWebImageProgressiveDownload |  SDWebImageTransformAnimatedImage | SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+    [cell.contentImageView sd_setImageWithURL:[NSURL URLWithString:model.contentImageUrlStr] placeholderImage:[UIImage sd_animatedGIFWithData:imageData] options:SDWebImageProgressiveDownload |  SDWebImageCacheMemoryOnly | SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         NSLog(@"加载完成");
 //        CGSize size = CGSizeMake(model.width, model.height);
 //        UIImage *newImage =  [self scaleToSize:size andImage:image];
@@ -266,10 +284,10 @@ static NSString *cellID = @"cell";
 #pragma mark - 下载图片方法
 - (void)downLoadImageWithUrl:(NSURL *)url andURLString:(NSString *)str{
     
-
-
     
-    [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    
+    
+    [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
        
         NSLog(@"显示当前进度%ld" ,receivedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
@@ -283,7 +301,7 @@ static NSString *cellID = @"cell";
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeCustomView;
         [hud showAnimated:YES whileExecutingBlock:^{
-            sleep(2);
+            sleep(1.2);
         } completionBlock:^{
             [hud endEditing:YES];
             [hud removeFromSuperview];

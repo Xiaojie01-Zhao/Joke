@@ -241,11 +241,11 @@
             </objects>
             <point key="canvasLocation" x="-373" y="264"/>
         </scene>
-        <!--Root Tab Bar View Controller-->
+        <!--JOKE-->
         <scene sceneID="8tX-OE-qD4">
             <objects>
                 <tabBarController id="afy-ac-Qwo" customClass="RootTabBarViewController" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="Akh-G3-HNn">
+                    <navigationItem key="navigationItem" title="JOKE" id="Akh-G3-HNn">
                         <barButtonItem key="leftBarButtonItem" systemItem="bookmarks" id="zal-HJ-yAa">
                             <connections>
                                 <action selector="menuAction:" destination="afy-ac-Qwo" id="Agr-jc-dkq"/>
@@ -266,7 +266,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N4N-SG-xtJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="549" y="206"/>
+            <point key="canvasLocation" x="290" y="210"/>
         </scene>
         <!--视频-->
         <scene sceneID="mCy-Ux-BnQ">
@@ -337,7 +337,7 @@
                             <outlet property="delegate" destination="GUl-rm-Bbr" id="zRJ-Jp-gkw"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="视频" image="shipin" id="1cz-QP-PRb"/>
+                    <tabBarItem key="tabBarItem" title="视频" image="movie" id="1cz-QP-PRb"/>
                     <navigationItem key="navigationItem" id="Dxf-iW-djN"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vSR-pM-zfw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -351,6 +351,6 @@
         <image name="duanzi" width="40" height="40"/>
         <image name="imageDownload" width="50" height="50"/>
         <image name="jiongtu" width="40" height="40"/>
-        <image name="shipin" width="50" height="50"/>
+        <image name="movie" width="45" height="45"/>
     </resources>
 </document>

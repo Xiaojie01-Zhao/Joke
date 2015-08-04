@@ -32,7 +32,7 @@ static NSString *cellID = @"waterCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.dataSourceImage = [NSMutableArray array];
+
 
     self.view.backgroundColor = [UIColor whiteColor];
     self.appdelegate = [UIApplication sharedApplication ].delegate;
@@ -70,7 +70,9 @@ static NSString *cellID = @"waterCell";
 }
 
 - (void)getDataForFile{
-    
+    [self.dataSourceImage removeAllObjects];
+    self.dataSourceImage = nil;
+    self.dataSourceImage = [NSMutableArray array];
     NSFetchRequest *fet = [NSFetchRequest fetchRequestWithEntityName:@"Movie"];
     
     NSArray *dataArr = [self.appdelegate.managedObjectContext executeFetchRequest:fet error:nil];
@@ -136,12 +138,12 @@ static NSString *cellID = @"waterCell";
             break;
           case UIGestureRecognizerStateEnded:
         {
-            NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[sender locationInView:self.collectionView]];
-            if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
-                [self.dataSourceImage exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
-                [self.collectionView moveItemAtIndexPath:sourceIndexPath toIndexPath:indexPath];
-                [self.collectionView reloadData];
-            }
+//            NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[sender locationInView:self.collectionView]];
+//            if (indexPath && ![indexPath isEqual:sourceIndexPath]) {
+//                [self.dataSourceImage exchangeObjectAtIndex:indexPath.row withObjectAtIndex:sourceIndexPath.row];
+//                [self.collectionView moveItemAtIndexPath:sourceIndexPath toIndexPath:indexPath];
+//                [self.collectionView reloadData];
+//            }
         }
             break;
         default:
@@ -177,10 +179,20 @@ static NSString *cellID = @"waterCell";
     }
     [self.appdelegate.managedObjectContext deleteObject:movieModel];
     [self.appdelegate.managedObjectContext save:nil];
-
-        [self.dataSourceImage removeObjectAtIndex:sender.tag - 1000];
-//
+    
+    [self.collectionView performBatchUpdates:^{
+        [self.dataSourceImage removeObjectAtIndex:indexPath.row];
         [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+    } completion:^(BOOL finished) {
+        [self getDataForFile];
+        [self collectionView:self.collectionView waterFlowLayout:self.waterLayout heightForIndexPath:indexPath];
+        [self.collectionView reloadData];
+        
+    }];
+
+//        [self.dataSourceImage removeObjectAtIndex:sender.tag - 1000];
+////
+//        [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
 
 //    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
     

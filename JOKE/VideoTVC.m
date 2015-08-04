@@ -48,6 +48,7 @@
 
 @property (nonatomic , assign) CGFloat movieLong;
 
+@property (nonatomic , strong)  UIButton *button;
 @end
 
 static NSString *cellID = @"cell";
@@ -81,10 +82,31 @@ static NSString *cellID = @"cell";
         [self getDataForVideo];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.tableView.footer endRefreshing];
-//            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.dataSource.count - 1 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+
         });
     }];
+    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.button.frame = CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 100, 30, 45);
+    [self.button addTarget:self action:@selector(goTop:) forControlEvents:UIControlEventTouchUpInside];
+    //    button.backgroundColor = [UIColor greenColor];
+    [self.button setBackgroundImage:[UIImage imageNamed:@"top"] forState:UIControlStateNormal];
+    [self.navigationController.view addSubview:self.button];
+    
+    
+    
 }
+- (void)goTop:(UIButton *)sender{
+    if (self.player.status == AVPlayerStatusReadyToPlay) {
+        [self.player pause];
+    }
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionTop];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    self.button.hidden = NO;
+}
+
 - (void)getDataForVideo{
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -249,6 +271,14 @@ static NSString *cellID = @"cell";
     NSLog(@"滑动tableView");
     //  视屏播放器暂停
     [self.player pause];
+    
+//    if (self.avPlayerView) {
+//        [self.avPlayerView removeFromSuperview];
+//        for (CALayer *layer in self.avPlayerView.layer.sublayers) {
+//            [layer removeFromSuperlayer];
+//        }
+//    }
+    
     //  切换图片
     [self.avPlayerView.bigPlayButton setBackgroundImage:[UIImage imageNamed:@"播放器_播放"] forState:UIControlStateNormal];
     self.avPlayerView.bottomOperationView.alpha = 0.68;
@@ -268,17 +298,28 @@ static NSString *cellID = @"cell";
     NSLog(@"%@", [sender.view.superview.superview class]);
     
     
-    if (self.player.status == AVPlayerStatusReadyToPlay) {
+    if (self.player ) {
         [self.player pause];
-    }
-   
-    if (self.avPlayerView) {
+
+        
         [self.avPlayerView removeFromSuperview];
+        self.avPlayerView = nil;
         self.movieURL = nil;
         self.player = nil;
+        self.avPlayerView.progressSlider.value = 0;
         [self removeObserverFromPlayerItem:self.player.currentItem];
+        
+
+        for (CALayer *layer in self.avPlayerView.layer.sublayers) {
+            if ([layer isKindOfClass:[AVPlayer class]]) {
+                
+                [layer removeFromSuperlayer];
+            }
+        }
+
+       
     }
-    
+   
 
     VideoCell *cell = (VideoCell *)sender.view.superview.superview;
     
@@ -316,7 +357,7 @@ static NSString *cellID = @"cell";
     playerLayer.videoGravity = AVLayerVideoGravityResize ;
     
     // 插入到view的层上面，我没有用addSublayer，因为我想让播放的视图在最下层
-    [cell.contentImageView.layer insertSublayer:playerLayer atIndex:0];
+    [self.avPlayerView.layer insertSublayer:playerLayer atIndex:0];
     
     // big播放
     [self.avPlayerView.bigPlayButton addTarget:self action:@selector(playMovieAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -374,10 +415,10 @@ static NSString *cellID = @"cell";
         
         HUD.mode = MBProgressHUDModeCustomView;
         HUD.labelText = @"已添加到下载列表";
-        HUD.dimBackground = NO;
+        HUD.dimBackground = YES;
         
         [HUD showAnimated:YES whileExecutingBlock:^{
-            sleep(1.5)  ;
+            sleep(1.1)  ;
         } completionBlock:^{
             [HUD removeFromSuperview];
         }];
@@ -415,10 +456,10 @@ static NSString *cellID = @"cell";
         
         hud.mode = MBProgressHUDModeCustomView;
         hud.labelText = @"您已经下载过了";
-        hud.dimBackground = NO;
+        hud.dimBackground = YES;
         [hud showAnimated:YES whileExecutingBlock:^{
            
-            sleep(1.5);
+            sleep(1.1);
         } completionBlock:^{
             [hud removeFromSuperview];
         }];
@@ -475,7 +516,7 @@ static NSString *cellID = @"cell";
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeText;
         [hud showAnimated:YES whileExecutingBlock:^{
-            sleep(1.5);
+            sleep(1.1);
         } completionBlock:^{
             [hud endEditing:YES];
             [hud removeFromSuperview];
@@ -489,10 +530,10 @@ static NSString *cellID = @"cell";
         MBProgressHUD *hud = [[MBProgressHUD alloc]init];
         [self.navigationController.view addSubview:hud];
         hud.labelText = @"下载失败!";
-        hud.dimBackground = NO;
+        hud.dimBackground = YES;
         hud.mode = MBProgressHUDModeText;
         [hud showAnimated:YES whileExecutingBlock:^{
-            sleep(1.5);
+            sleep(1.1);
         } completionBlock:^{
             [hud endEditing:YES];
             [hud removeFromSuperview];
@@ -551,8 +592,6 @@ static NSString *cellID = @"cell";
 #pragma  mark - big播放
 - (void)playMovieAction:(UIButton *)sender{
     
-    
-    
 
     self.mb = [[MBProgressHUD alloc]init];
     [self.avPlayerView addSubview:self.mb];
@@ -562,7 +601,8 @@ static NSString *cellID = @"cell";
     [self.mb show:YES];
 
 
-
+    
+    
     
     
     NSLog(@"%@" , [sender.superview.superview.superview.superview class]);
@@ -576,6 +616,7 @@ static NSString *cellID = @"cell";
         }
         // 播放
         [self.player play];
+        
        [sender setBackgroundImage:[UIImage imageNamed:@"播放器_暂停"] forState:UIControlStateNormal];
    
         self.isBigPlayer = YES;

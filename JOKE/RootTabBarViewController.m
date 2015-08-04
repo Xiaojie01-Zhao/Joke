@@ -28,11 +28,21 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.isOne = YES;
-    self.view.backgroundColor = [UIColor orangeColor];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
+
+
+
 - (IBAction)menuAction:(id)sender {
     
     if (self.isOne) {
+        
+        for (UIView *view in self.navigationController.view.subviews) {
+            if ([view isKindOfClass:[UIButton class]]) {
+                view.hidden = YES;
+            }
+        }
+        
         _testMutableArray = [NSMutableArray array];
         
         NSArray *color = @[RGB_COLOR(110, 195, 200),RGB_COLOR(241, 122, 110),RGB_COLOR(218, 96, 36),RGB_COLOR(250, 187, 13),RGB_COLOR(241, 146, 113),RGB_COLOR(28, 78, 147),RGB_COLOR(3, 166, 174)];
@@ -75,8 +85,13 @@
                         NSLog(@"下载");
 //                        DownloadViewController *downloadVC = [[DownloadViewController alloc]init];
 //                        [self presentViewController:downloadVC animated:YES completion:nil];
+                        
+
+                        
                         WaterFlowViewController *waterVC = [[WaterFlowViewController alloc]init];
                         [self.navigationController showViewController:waterVC sender:nil];
+                        UIView *views= [self.navigationController.view viewWithTag:10003];
+                        [views removeFromSuperview];
 
                     }
                     if ([view.teamName.text isEqualToString:@"夜间模式"]) {
@@ -95,9 +110,9 @@
         }
         self.c_x = [[CXDynamicModuleView alloc]initWithFrame:self.view.bounds];
         _c_x.imageNameArray = _testMutableArray;
-        UIView * abc =  [_c_x loadDynamicModuleView:self.view];
+        UIView * abc =  [_c_x loadDynamicModuleView:self.navigationController.view];
         abc.tag = 10003;
-        [self.view addSubview:abc];
+        [self.navigationController.view addSubview:abc];
         
         
         _isOne = NO;
@@ -119,6 +134,7 @@
         self.nightView.alpha = 0.5;
         self.nightView.userInteractionEnabled = NO;
         [self.view.window addSubview:self.nightView];
+        
     } else {
         for (UIView *view in self.view.window.subviews) {
             if ([view isEqual:self.nightView]) {

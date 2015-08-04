@@ -51,6 +51,8 @@
     self.button.frame = CGRectMake(40, 30, [UIScreen mainScreen].bounds.size.width - 80, 40);
     [self.button setTitle:@"删除当前的视频" forState:UIControlStateNormal];
     [self.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.button.layer.masksToBounds = YES;
+    self.button.layer.cornerRadius = 5;
     self.button.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.button.backgroundColor = [UIColor yellowColor];
     self.button.hidden = YES;
@@ -72,7 +74,13 @@
         self.yPointLabel.alpha = 1;
         self.yPointSlider.alpha = 1;
         self.contentOffsetLabel.alpha = 1;
-
+    
+        self.backButton.hidden = NO;
+        self.goDiLabel.hidden = NO;
+        self.textField.hidden = NO;
+        self.geLabel.hidden = NO;
+        self.nextButton.hidden = NO;
+        
         self.button.hidden = YES;
         
     } else {
@@ -82,6 +90,12 @@
         self.yPointLabel.alpha = 0;
         self.yPointSlider.alpha = 0;
         self.contentOffsetLabel.alpha = 0;
+        
+        self.backButton.hidden = YES;
+        self.goDiLabel.hidden = YES;
+        self.textField.hidden = YES;
+        self.geLabel.hidden = YES;
+        self.nextButton.hidden = YES;
         
         [UIView animateWithDuration:0.5 animations:^{
             
@@ -257,7 +271,7 @@
 //        aaaaa.cornerRadius = 20;
         
         
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 190, 290)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width * 200 / 375, [UIScreen mainScreen].bounds.size.height * 300 / 667)];
         imageView.contentMode = UIViewContentModeScaleToFill;
         
         

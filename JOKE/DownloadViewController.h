@@ -22,4 +22,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *contentOffsetLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *mySwitch;
 
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UILabel *goDiLabel;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *geLabel;
+@property (weak, nonatomic) IBOutlet UIButton *nextButton;
+
 @end

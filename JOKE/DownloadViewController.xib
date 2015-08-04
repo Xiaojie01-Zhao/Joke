@@ -6,12 +6,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DownloadViewController">
             <connections>
+                <outlet property="backButton" destination="cSe-Za-Z4t" id="L8Z-lx-GwQ"/>
                 <outlet property="carousel" destination="ckN-Qp-8kK" id="5aN-Vu-cEb"/>
                 <outlet property="contentOffsetLabel" destination="zmm-yk-diN" id="pzY-fJ-wWz"/>
+                <outlet property="geLabel" destination="gCp-yz-T6G" id="k8v-gI-3Vg"/>
+                <outlet property="goDiLabel" destination="vVZ-9o-smC" id="daa-mp-pUE"/>
                 <outlet property="mySwitch" destination="1Ds-2k-Ezh" id="pns-R7-ULy"/>
+                <outlet property="nextButton" destination="fPv-Tc-4Rw" id="JUJ-Hr-sQA"/>
                 <outlet property="shijiaoLabel" destination="a0k-cX-wuN" id="49U-H3-6xI"/>
                 <outlet property="shijiaoSlider" destination="3nB-5i-a8V" id="PVE-P9-A8G"/>
-                <outlet property="textField" destination="EyB-UV-7eH" id="Y3K-4w-sld"/>
+                <outlet property="textField" destination="EyB-UV-7eH" id="vul-rD-lBJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewpointOffsetLabel" destination="IOP-5B-0I3" id="yce-GD-34m"/>
                 <outlet property="yPointLabel" destination="wUR-pD-Qff" id="3kh-sU-yy6"/>
@@ -64,7 +68,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPv-Tc-4Rw">
-                    <rect key="frame" x="362" y="80" width="32" height="30"/>
+                    <rect key="frame" x="357" y="80" width="32" height="30"/>
                     <state key="normal" title="Next">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -153,7 +157,7 @@
                 <constraint firstItem="IOP-5B-0I3" firstAttribute="top" secondItem="3nB-5i-a8V" secondAttribute="bottom" constant="5" id="jmi-vA-gbU"/>
                 <constraint firstItem="cSe-Za-Z4t" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="k7j-TA-che"/>
                 <constraint firstItem="gCp-yz-T6G" firstAttribute="top" secondItem="3nB-5i-a8V" secondAttribute="bottom" constant="40" id="oKR-y9-x9J"/>
-                <constraint firstItem="fPv-Tc-4Rw" firstAttribute="leading" secondItem="gCp-yz-T6G" secondAttribute="trailing" constant="10" id="ovN-lz-Wqo"/>
+                <constraint firstItem="fPv-Tc-4Rw" firstAttribute="leading" secondItem="gCp-yz-T6G" secondAttribute="trailing" constant="5" id="ovN-lz-Wqo"/>
                 <constraint firstAttribute="trailing" secondItem="IOP-5B-0I3" secondAttribute="trailing" constant="15" id="s9p-M9-Hta"/>
                 <constraint firstItem="3nB-5i-a8V" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="uvU-RE-0Dc"/>
             </constraints>
